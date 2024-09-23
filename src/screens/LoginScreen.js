@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // Importando o LinearGradient corretamente do Expo
+import { Ionicons } from '@expo/vector-icons'; // Importando os ícones
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -31,24 +32,32 @@ const LoginScreen = ({ navigation }) => {
             />
           </View>
 
+          {/* Campo de usuário com ícone */}
           <Text style={styles.title}>Usuário</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite seu nome de usuário"
-            placeholderTextColor="#888"
-            value={username}
-            onChangeText={setUsername}
-          />
+          <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={24} color="#888" style={styles.icon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Digite seu nome de usuário"
+              placeholderTextColor="#888"
+              value={username}
+              onChangeText={setUsername}
+            />
+          </View>
 
+          {/* Campo de senha com ícone */}
           <Text style={styles.title}>Senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite sua senha"
-            placeholderTextColor="#888"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={24} color="#888" style={styles.icon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Digite sua senha"
+              placeholderTextColor="#888"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
 
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Entrar</Text>
@@ -75,34 +84,46 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   logoContainer: {
-    marginBottom: 100, // Ajuste o espaçamento conforme necessário
+    marginBottom: 50, // Ajuste o espaçamento conforme necessário
   },
   logo: {
-    width: 140, // Largura da logo (reduzida um pouco)
-    height: 140, // Altura da logo (reduzida um pouco)
+    width: 200, // Aumentando ainda mais a largura da logo
+    height: 180, // Aumentando ainda mais a altura da logo
   },
   title: {
     fontSize: 18,
     color: '#fff',
     marginBottom: 8,
     fontWeight: 'bold',
+    alignSelf: 'flex-start', // Alinha o título à esquerda
+    paddingLeft: 50, // Mesma distância horizontal do input
+  },
+  inputContainer: {
+    flexDirection: 'row', // Para alinhar o ícone e o input na horizontal
+    alignItems: 'center', // Centralizar o conteúdo verticalmente
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    height: 50,
+    width: '80%', // Diminuindo a largura do campo de input
+  },
+  icon: {
+    marginRight: 10, // Espaçamento entre o ícone e o input
   },
   input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    marginBottom: 20,
-    width: '100%', // Largura total do campo de input
+    flex: 1, // O input ocupa o espaço restante ao lado do ícone
+    height: '100%',
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#4CAF50',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    width: '100%', // Largura total do botão
+    width: '80%', // Diminuindo a largura do botão para corresponder ao input
   },
   buttonText: {
     color: '#fff',
