@@ -1,38 +1,49 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Platform, SafeAreaView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Para ícones
-import { Menu, Provider } from 'react-native-paper'; // Importar Menu da react-native-paper
+import { Ionicons } from '@expo/vector-icons';
+import { Menu, Provider } from 'react-native-paper';
 
-const CustomHeader = ({ title, onLogoutPress, showMenu = true }) => {
+const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showBackButton = false, iconName = null }) => {
   const [visible, setVisible] = useState(false);
-
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
   return (
     <Provider>
-      {/* Ajustando o StatusBar */}
       <StatusBar
         barStyle={Platform.OS === 'android' ? 'light-content' : 'dark-content'}
         backgroundColor="#3D3434"
       />
-
-      {/* SafeAreaView para garantir que o header não invada a status bar */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.headerContainer}>
           <View style={styles.leftContainer}>
-            <Ionicons name="person-outline" size={20} color="#fff" style={styles.icon} />
+            {/* Botão de voltar */}
+            {showBackButton && (
+              <>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                  <Ionicons name="arrow-back-outline" size={24} color="#fff" />
+                </TouchableOpacity>
+                {/* Divider */}
+                <View style={styles.divider} />
+              </>
+            )}
+            {/* Ícone dinâmico com base na tela */}
+            {iconName && (
+              <>
+                <Ionicons name={iconName} size={24} color="#fff" style={styles.icon} />
+                <View style={styles.divider} />
+              </>
+            )}
             <Text style={styles.title}>{title}</Text>
           </View>
-
-          {/* Exibir o menu apenas se showMenu for true */}
+          {/* Menu */}
           {showMenu && (
             <Menu
               visible={visible}
               onDismiss={closeMenu}
               anchor={
                 <TouchableOpacity onPress={openMenu}>
-                  <Ionicons name="ellipsis-vertical" size={20} color="#fff" />
+                  <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
                 </TouchableOpacity>
               }
             >
@@ -48,23 +59,32 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 0,
-    backgroundColor: '#3D3434', // Cor de fundo do header para o SafeAreaView
+    backgroundColor: '#3D3434',
   },
   headerContainer: {
-    height: 55, // Altura do header
+    height: 50,
     backgroundColor: '#3D3434',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  backButton: {
+    marginRight: 10,
+  },
+  divider: {
+    width: 1,
+    height: '70%',
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+  },
   title: {
     color: '#fff',
-    fontSize: 16, // Diminuindo o tamanho do texto
+    fontSize: 18,
     marginLeft: 8,
   },
   icon: {
