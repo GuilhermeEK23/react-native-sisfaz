@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // Importando o gradiente
 import { Ionicons } from '@expo/vector-icons'; // Importando os ícones
 
@@ -12,29 +12,31 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={['rgb(91, 154, 85)', 'rgba(0, 0, 0, 0.84)']} // Gradiente igual da tela de login
-      style={styles.gradient}
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Comanda/Mesa</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <LinearGradient
+        colors={['rgb(91, 154, 85)', 'rgba(0, 0, 0, 0.84)']} // Gradiente igual da tela de login
+        style={styles.gradient}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.title}>Comanda/Mesa</Text>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="search-outline" size={24} color="#888" style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Digite o número da comanda/mesa"
-            placeholderTextColor="#888"
-            value={comanda}
-            onChangeText={setComanda}
-          />
+          <View style={styles.inputContainer}>
+            <Ionicons name="search-outline" size={24} color="#888" style={styles.icon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o número da comanda/mesa"
+              placeholderTextColor="#888"
+              value={comanda}
+              onChangeText={setComanda}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={handleCreateComanda}>
+            <Text style={styles.buttonText}>Criar</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleCreateComanda}>
-          <Text style={styles.buttonText}>Criar</Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+    </TouchableWithoutFeedback>
   );
 };
 

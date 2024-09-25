@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window');
@@ -31,66 +31,68 @@ const ComandaMesa = ({ navigation }) => {
   ];
 
   return (
-    <View style={styles.contentArea}>
-      <View style={styles.squareContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Pesquisar produtos..."
-          placeholderTextColor="#888"
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-        />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.contentArea}>
+        <View style={styles.squareContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Pesquisar produtos..."
+            placeholderTextColor="#888"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
 
-        {/* Grid de produtos */}
-        <ScrollView style={styles.productContainer}>
-          <View style={styles.productGrid}>
-            {staticProducts.map((product) => (
-              <TouchableOpacity key={product.id} style={styles.productSquare}>
-                <Text style={styles.productText}>{product.name}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Grupos dentro do container */}
-        <View style={styles.groupContainer}>
-          <ScrollView horizontal style={styles.groupScroll} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="glass-cocktail" size={30} color="#fff" />
-              <Text style={styles.groupText}>Drinks</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="glass-mug" size={30} color="#fff" />
-              <Text style={styles.groupText}>Sucos</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="bottle-soda" size={30} color="#fff" />
-              <Text style={styles.groupText}>Refri</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="beer" size={30} color="#fff" />
-              <Text style={styles.groupText}>Cervejas</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="cup-water" size={30} color="#fff" />
-              <Text style={styles.groupText}>Água/Café</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.groupItem}>
-              <Icon name="ice-cream" size={30} color="#fff" />
-              <Text style={styles.groupText}>Sorvetes</Text>
-            </TouchableOpacity>
+          {/* Grid de produtos */}
+          <ScrollView style={styles.productContainer}>
+            <View style={styles.productGrid}>
+              {staticProducts.map((product) => (
+                <TouchableOpacity key={product.id} style={styles.productSquare}>
+                  <Text style={styles.productText}>{product.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </ScrollView>
+
+          {/* Divider */}
+          <View style={styles.divider} />
+
+          {/* Grupos dentro do container */}
+          <View style={styles.groupContainer}>
+            <ScrollView horizontal style={styles.groupScroll} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="glass-cocktail" size={30} color="#fff" />
+                <Text style={styles.groupText}>Drinks</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="glass-mug" size={30} color="#fff" />
+                <Text style={styles.groupText}>Sucos</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="bottle-soda" size={30} color="#fff" />
+                <Text style={styles.groupText}>Refri</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="beer" size={30} color="#fff" />
+                <Text style={styles.groupText}>Cervejas</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="cup-water" size={30} color="#fff" />
+                <Text style={styles.groupText}>Água/Café</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.groupItem}>
+                <Icon name="ice-cream" size={30} color="#fff" />
+                <Text style={styles.groupText}>Sorvetes</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
