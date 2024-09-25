@@ -15,13 +15,14 @@ const ProductScreen = () => {
         colors={['rgb(91, 154, 85)', 'rgba(0, 0, 0, 0.84)']}
         style={styles.gradient}
       >
-        {/* Ajustando o marginTop para distanciar o conteúdo do header */}
         <View style={styles.container}>
           <Tab.Navigator
             screenOptions={{
               tabBarLabelStyle: styles.tabLabel,
               tabBarStyle: styles.tabBar,
               tabBarIndicatorStyle: styles.tabIndicator,
+              swipeEnabled: false, // Habilitar swipe entre as tabs
+              animationEnabled: true, // Adiciona animação na transição
             }}
           >
             <Tab.Screen name="Comanda/Mesa" component={ComandaMesa} />
@@ -37,14 +38,14 @@ const ProductScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#3D3434', // Mesma cor do header para suavizar transições
+    backgroundColor: '#3D3434',
   },
   gradient: {
     flex: 1,
   },
   container: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight + 10, // Adiciona espaço no iOS para distanciar do header
+    marginTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight + 10,
   },
   tabLabel: {
     fontSize: 12,
