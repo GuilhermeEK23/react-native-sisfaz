@@ -21,7 +21,7 @@ const ProductScreen = () => {
               tabBarLabelStyle: styles.tabLabel,
               tabBarStyle: styles.tabBar,
               tabBarIndicatorStyle: styles.tabIndicator,
-              swipeEnabled: false, // Habilitar swipe entre as tabs
+              // swipeEnabled: false, // Habilitar swipe entre as tabs
               animationEnabled: true, // Adiciona animação na transição
             }}
           >
