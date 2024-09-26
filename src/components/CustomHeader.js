@@ -5,11 +5,16 @@ import { Menu, Provider } from 'react-native-paper';
 
 const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showBackButton = false, iconName = null }) => {
   const [visible, setVisible] = useState(false);
+
+  // Abre o menu
   const openMenu = () => setVisible(true);
+
+  // Fecha o menu
   const closeMenu = () => setVisible(false);
 
   return (
     <Provider>
+      {/* Ao clicar fora do menu, ele será fechado */}
       <TouchableWithoutFeedback onPress={closeMenu}>
         <View style={{ flex: 1 }}>
           <StatusBar
@@ -25,7 +30,6 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                       <Ionicons name="arrow-back-outline" size={24} color="#fff" />
                     </TouchableOpacity>
-                    {/* Divider */}
                     <View style={styles.divider} />
                   </>
                 )}
@@ -38,11 +42,12 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                 )}
                 <Text style={styles.title}>{title}</Text>
               </View>
-              {/* Menu */}
+
+              {/* Menu de opções */}
               {showMenu && (
                 <Menu
                   visible={visible}
-                  onDismiss={closeMenu}
+                  onDismiss={closeMenu}  // Fecha o menu ao clicar fora dele ou ao abrir o menu novamente
                   anchor={
                     <TouchableOpacity onPress={openMenu}>
                       <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
@@ -50,6 +55,12 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                   }
                 >
                   <Menu.Item onPress={onLogoutPress} title="Sair" />
+                  {/* Botão de fechar (ícone "X") */}
+                  <Menu.Item
+                    onPress={closeMenu}
+                    title="Fechar"
+                    icon={() => <Ionicons name="close" size={20} color="#000" />}
+                  />
                 </Menu>
               )}
             </View>
