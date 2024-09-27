@@ -27,20 +27,61 @@ const ComandaMesa = ({ navigation }) => {
     { id: 17, name: 'Cerveja IPA' },
     { id: 18, name: 'Coca-Cola' },
     { id: 19, name: 'Fanta' },
-    { id: 20, name: 'Pepsi' },
+    { id: 21, name: 'Pepsi' },
+    { id: 22, name: 'Pepsi' },
+    { id: 23, name: 'Pepsi' },
+    { id: 24, name: 'Pepsi' },
+    { id: 25, name: 'Pepsi' },
+    { id: 26, name: 'Pepsi' },
+    { id: 27, name: 'Pepsi' },
+    { id: 28, name: 'Pepsi' },
+    { id: 29, name: 'Pepsi' },
+    { id: 30, name: 'Pepsi' },
+    { id: 31, name: 'Pepsi' },
+    { id: 32, name: 'Pepsi' },
+    { id: 33, name: 'Pepsi' },
+    { id: 34, name: 'Pepsi' },
+    { id: 35, name: 'Pepsi' },
+    { id: 36, name: 'Pepsi' },
+    { id: 37, name: 'Pepsi' },
+    { id: 38, name: 'Pepsi' },
+    { id: 39, name: 'Pepsi' },
+    { id: 40, name: 'Pepsi' },
+    { id: 41, name: 'Pepsi' },
+    { id: 42, name: 'Pepsi' },
+    { id: 43, name: 'Pepsi' },
+    { id: 44, name: 'Pepsi' },
+    { id: 45, name: 'Pepsi' },
+    { id: 46, name: 'Pepsi' },
+    { id: 47, name: 'Pepsi' },
+    { id: 48, name: 'Pepsi' },
+    { id: 49, name: 'Pepsi' },
+    { id: 50, name: 'Pepsi' },
+    { id: 51, name: 'Pepsi' },
+    { id: 52, name: 'Pepsi' },
+    { id: 53, name: 'Pepsi' },
+    { id: 54, name: 'Pepsi' },
+    { id: 55, name: 'Pepsi' },
+    { id: 56, name: 'Pepsi' },
   ];
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.contentArea}>
         <View style={styles.squareContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Pesquisar produtos..."
-            placeholderTextColor="#888"
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-          />
+          {/* Search input com ícone de pesquisa fora do input */}
+          <View style={styles.searchContainer}>
+            <TouchableOpacity style={styles.searchIconWrapper}>
+              <Icon name="magnify" size={24} color="#5B9A55" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Pesquisar produtos..."
+              placeholderTextColor="#888"
+              value={searchTerm}
+              onChangeText={setSearchTerm}
+            />
+          </View>
 
           {/* Grid de produtos */}
           <ScrollView style={styles.productContainer}>
@@ -53,41 +94,50 @@ const ComandaMesa = ({ navigation }) => {
             </View>
           </ScrollView>
 
-          {/* Divider */}
-          <View style={styles.divider} />
-
           {/* Grupos dentro do container */}
           <View style={styles.groupContainer}>
             <ScrollView horizontal style={styles.groupScroll} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="glass-cocktail" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="glass-cocktail" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Drinks</Text>
-              </TouchableOpacity>
+              </View>
 
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="glass-mug" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="glass-mug" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Sucos</Text>
-              </TouchableOpacity>
+              </View>
 
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="bottle-soda" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="bottle-soda" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Refri</Text>
-              </TouchableOpacity>
+              </View>
 
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="beer" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="beer" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Cervejas</Text>
-              </TouchableOpacity>
+              </View>
 
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="cup-water" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="cup-water" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Água/Café</Text>
-              </TouchableOpacity>
+              </View>
 
-              <TouchableOpacity style={styles.groupItem}>
-                <Icon name="ice-cream" size={30} color="#fff" />
+              <View style={styles.groupItemContainer}>
+                <TouchableOpacity style={styles.groupItem}>
+                  <Icon name="ice-cream" size={30} color="#fff" />
+                </TouchableOpacity>
                 <Text style={styles.groupText}>Sorvetes</Text>
-              </TouchableOpacity>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -97,22 +147,39 @@ const ComandaMesa = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // ícone à esquerda e input à direita
+    marginVertical: 8,
+    width: '100%',
+    alignSelf: 'center',
+    paddingHorizontal: 16,
+  },
+  searchIconWrapper: {
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   input: {
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    marginVertical: 8,
     borderRadius: 5,
-    width: '80%',
-    alignSelf: 'center',
+    fontSize: 16,
+    width: '85%', // Ajustado para ocupar o espaço à direita
   },
   contentArea: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: 0, // Removido para ocupar 100% da largura
+    paddingVertical: 0,
   },
   productContainer: {
-    height: height * 0.4,
+    height: height * 0.7, // Maior área para produtos
+    marginTop: 10,
   },
   productGrid: {
     flexDirection: 'row',
@@ -133,16 +200,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#cccccc',
-    marginVertical: 10,
-  },
   groupContainer: {
-    paddingVertical: 10,
+    paddingVertical: 0,
   },
   groupScroll: {
-    paddingVertical: 10,
+    paddingVertical: 8,
+  },
+  groupItemContainer: {
+    alignItems: 'center',
+    width: 57,
+    marginHorizontal: 5,
   },
   groupItem: {
     width: 57,
@@ -154,18 +221,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   groupText: {
-    color: '#fff',
+    color: '#000',
     textAlign: 'center',
     fontSize: 12,
     marginTop: 5,
+    width: '100%',
+    flexWrap: 'wrap',
   },
   squareContainer: {
-    backgroundColor: '#D9D9D9',
-    padding: 10,
-    marginBottom: 20,
-    marginHorizontal: 5,
-    borderRadius: 10,
     flex: 1,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 10,
+    padding: 10,
   },
 });
 

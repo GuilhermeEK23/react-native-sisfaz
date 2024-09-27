@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "react-native-sisfaz",
+    "name": "SisFaz gourmet",
     "slug": "react-native-sisfaz",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -32,6 +31,12 @@
           "port": 9090
         }
       }
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "70d5655e-d5e4-4dc3-8f37-1290efeda05c"
+      }
+    },
+    "owner": "lucaslutf"
   }
 }

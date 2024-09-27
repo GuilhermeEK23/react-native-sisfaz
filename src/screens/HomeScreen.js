@@ -11,6 +11,11 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Product');
   };
 
+  const handleEnter = () => {
+    console.log('Ícone de entrar clicado');
+    // Aqui você pode adicionar qualquer ação desejada ao clicar no ícone
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <LinearGradient
@@ -18,21 +23,28 @@ const HomeScreen = ({ navigation }) => {
         style={styles.gradient}
       >
         <View style={styles.overlay}>
-          <Text style={styles.title}>Comanda/Mesa</Text>
+          <Text style={styles.title}>Comanda</Text>
 
-          <View style={styles.inputContainer}>
-            <Ionicons name="search-outline" size={24} color="#888" style={styles.icon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Digite o número da comanda/mesa"
-              placeholderTextColor="#888"
-              value={comanda}
-              onChangeText={setComanda}
-            />
+          <View style={styles.inputWithIconContainer}>
+            <View style={styles.inputContainer}>
+              <Ionicons name="search-outline" size={24} color="#888" style={styles.icon} />
+              <TextInput
+                style={styles.input}
+                placeholder="Digite o número da comanda"
+                placeholderTextColor="#888"
+                value={comanda}
+                onChangeText={setComanda}
+                keyboardType="numeric" // Exibe teclado numérico em Android e iOS
+              />
+            </View>
+
+            <TouchableOpacity style={styles.iconButton} onPress={handleEnter}>
+              <Ionicons name="enter-outline" size={24} color="#5B9A55" />
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity style={styles.button} onPress={handleCreateComanda}>
-            <Text style={styles.buttonText}>Criar</Text>
+            <Text style={styles.buttonText}>Abrir Comanda</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -58,6 +70,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingLeft: 50,
   },
+  inputWithIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%', // Mesma largura do botão
+    marginBottom: 20,
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -65,10 +83,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginBottom: 20,
     paddingHorizontal: 10,
     height: 50,
-    width: '80%',
+    flex: 1, // O input ocupará o restante do espaço
   },
   icon: {
     marginRight: 10,
@@ -77,6 +94,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     fontSize: 16,
+  },
+  iconButton: {
+    marginLeft: 10,
+    backgroundColor: '#fff',
+    borderRadius: 25, // Forma de círculo
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: '#4CAF50',

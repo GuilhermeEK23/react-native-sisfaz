@@ -25,7 +25,7 @@ const AppNavigator = () => {
           name="Home"
           component={HomeScreen}
           options={({ navigation }) => ({
-            header: () => <CustomHeader title="Comandas/Mesas" showMenu={true} navigation={navigation} iconName="document-text-outline" />, // Ícone de comanda
+            header: () => <CustomHeader title="Comandas" showMenu={true} navigation={navigation} iconName="document-text-outline" />, // Ícone de comanda
           })}
         />
         {/* Tela Product - Sem ícone */}
