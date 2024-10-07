@@ -17,6 +17,7 @@ const { width, height } = Dimensions.get("window");
 
 const ComandaMesa = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [observationTerm, setObservationTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -28,6 +29,15 @@ const ComandaMesa = ({ navigation }) => {
     { id: 4, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
     { id: 5, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
     { id: 6, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 7, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 8, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 9, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 10, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 11, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 12, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 13, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 14, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
+    { id: 15, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
   ]);
 
   const staticProducts = [
@@ -41,6 +51,7 @@ const ComandaMesa = ({ navigation }) => {
     { id: 8, name: "Água Sem Gás", price: 2.5 },
     { id: 9, name: "Milkshake", price: 12.0 },
     { id: 10, name: "Whisky", price: 30.0 },
+    { id: 11, name: "Whisky", price: 30.0 },
   ];
 
   const handleProductPress = (product) => {
@@ -270,6 +281,15 @@ const ComandaMesa = ({ navigation }) => {
                               </View>
                             </TouchableWithoutFeedback>
                           ))}
+
+                          {/* Input de observações */}
+                          <TextInput
+                            style={styles.observationsInput}
+                            placeholder="Observações (opcional)"
+                            placeholderTextColor="#888"
+                            value={observationTerm}
+                            onChangeText={setObservationTerm}
+                          />
                         </View>
                       </ScrollView>
                     )}
@@ -395,7 +415,7 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flexGrow: 1,
     justifyContent: "flex-end",
-    marginBottom: 90, // Ajustado para melhor visualização
+    marginBottom: "16%", // Ajustado para melhor visualização
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
@@ -474,6 +494,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginTop: 10,
+    marginBottom: 10,
   },
   optionalsButton: {
     backgroundColor: "#5B9A55",
@@ -500,6 +521,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ddd",
     height: "40%", // Ajustar a altura do container
+  },
+  observationsInput: {
+    marginTop: 10,
+    marginBottom: 15,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    height: 50, // Ajuste de altura para multiline
+    textAlignVertical: "center", // Garantir que o texto comece no topo
   },
 });
 
