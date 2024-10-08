@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     // Lógica de login
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
         <ImageBackground
-          source={require('../images/background.png')}
+          source={require("../images/background.png")}
           style={styles.background}
           resizeMode="cover"
         >
           <LinearGradient
-            colors={['rgb(91, 154, 85)', 'rgba(0, 0, 0, 0.84)']}
+            colors={["rgb(91, 154, 85)", "rgba(0, 0, 0, 0.84)"]}
             style={styles.gradient}
           >
-            <View style={styles.overlay}> 
+            <View style={styles.overlay}>
               <View style={styles.logoContainer}>
                 <Image
-                  source={require('../images/logo.png')}
+                  source={require("../images/logo.png")}
                   style={styles.logo}
                   resizeMode="contain"
                 />
@@ -35,7 +45,12 @@ const LoginScreen = ({ navigation }) => {
 
               <Text style={styles.title}>Usuário</Text>
               <View style={styles.inputContainer}>
-                <Ionicons name="person-outline" size={24} color="#888" style={styles.icon} />
+                <Ionicons
+                  name="person-outline"
+                  size={24}
+                  color="#888"
+                  style={styles.icon}
+                />
                 <TextInput
                   style={styles.input}
                   placeholder="Digite seu nome de usuário"
@@ -47,7 +62,12 @@ const LoginScreen = ({ navigation }) => {
 
               <Text style={styles.title}>Senha</Text>
               <View style={styles.inputContainer}>
-                <Ionicons name="lock-closed-outline" size={24} color="#888" style={styles.icon} />
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={24}
+                  color="#888"
+                  style={styles.icon}
+                />
                 <TextInput
                   style={styles.input}
                   placeholder="Digite sua senha"
@@ -72,16 +92,16 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   gradient: {
     flex: 1,
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   logoContainer: {
@@ -93,43 +113,43 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: '#fff',
+    color: "#fff",
     marginBottom: 8,
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
+    fontWeight: "bold",
+    alignSelf: "flex-start",
     paddingLeft: 50,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginBottom: 20,
     paddingHorizontal: 10,
     height: 50,
-    width: '80%',
+    width: "80%",
   },
   icon: {
     marginRight: 10,
   },
   input: {
     flex: 1,
-    height: '100%',
+    height: "100%",
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
-    width: '80%',
+    alignItems: "center",
+    width: "80%",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

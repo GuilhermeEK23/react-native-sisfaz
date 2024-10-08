@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Menu, Provider } from 'react-native-paper';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Menu, Provider } from "react-native-paper";
 
-const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showBackButton = false, iconName = null }) => {
+const CustomHeader = ({
+  title,
+  onLogoutPress,
+  showMenu = true,
+  navigation,
+  showBackButton = false,
+  iconName = null,
+}) => {
   const [visible, setVisible] = useState(false);
 
   // Abre o menu
@@ -18,7 +34,9 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
       <TouchableWithoutFeedback onPress={closeMenu}>
         <View style={{ flex: 1 }}>
           <StatusBar
-            barStyle={Platform.OS === 'android' ? 'light-content' : 'dark-content'}
+            barStyle={
+              Platform.OS === "android" ? "light-content" : "dark-content"
+            }
             backgroundColor="#3D3434"
           />
           <SafeAreaView style={styles.safeArea}>
@@ -27,8 +45,15 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                 {/* Botão de voltar */}
                 {showBackButton && (
                   <>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                      <Ionicons name="arrow-back-outline" size={24} color="#fff" />
+                    <TouchableOpacity
+                      onPress={() => navigation.goBack()}
+                      style={styles.backButton}
+                    >
+                      <Ionicons
+                        name="arrow-back-outline"
+                        size={24}
+                        color="#fff"
+                      />
                     </TouchableOpacity>
                     <View style={styles.divider} />
                   </>
@@ -36,7 +61,12 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                 {/* Ícone dinâmico com base na tela */}
                 {iconName && (
                   <>
-                    <Ionicons name={iconName} size={24} color="#fff" style={styles.icon} />
+                    <Ionicons
+                      name={iconName}
+                      size={24}
+                      color="#fff"
+                      style={styles.icon}
+                    />
                     <View style={styles.divider} />
                   </>
                 )}
@@ -47,10 +77,14 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
               {showMenu && (
                 <Menu
                   visible={visible}
-                  onDismiss={closeMenu}  // Fecha o menu ao clicar fora dele ou ao abrir o menu novamente
+                  onDismiss={closeMenu} // Fecha o menu ao clicar fora dele ou ao abrir o menu novamente
                   anchor={
                     <TouchableOpacity onPress={openMenu}>
-                      <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
+                      <Ionicons
+                        name="ellipsis-vertical"
+                        size={24}
+                        color="#fff"
+                      />
                     </TouchableOpacity>
                   }
                 >
@@ -59,7 +93,9 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
                   <Menu.Item
                     onPress={closeMenu}
                     title="Fechar"
-                    icon={() => <Ionicons name="close" size={20} color="#000" />}
+                    icon={() => (
+                      <Ionicons name="close" size={20} color="#000" />
+                    )}
                   />
                 </Menu>
               )}
@@ -74,31 +110,31 @@ const CustomHeader = ({ title, onLogoutPress, showMenu = true, navigation, showB
 const styles = StyleSheet.create({
   safeArea: {
     flex: 0,
-    backgroundColor: '#3D3434',
+    backgroundColor: "#3D3434",
   },
   headerContainer: {
     height: 50,
-    backgroundColor: '#3D3434',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: "#3D3434",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 10,
   },
   leftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   backButton: {
     marginRight: 10,
   },
   divider: {
     width: 1,
-    height: '70%',
-    backgroundColor: '#fff',
+    height: "70%",
+    backgroundColor: "#fff",
     marginHorizontal: 10,
   },
   title: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
     marginLeft: 8,
   },

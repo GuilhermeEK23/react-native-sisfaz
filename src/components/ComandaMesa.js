@@ -51,7 +51,32 @@ const ComandaMesa = ({ navigation }) => {
     { id: 8, name: "Água Sem Gás", price: 2.5 },
     { id: 9, name: "Milkshake", price: 12.0 },
     { id: 10, name: "Whisky", price: 30.0 },
-    { id: 11, name: "Whisky", price: 30.0 },
+    { id: 11, name: "Água", price: 30.0 },
+    { id: 12, name: "Água", price: 30.0 },
+    { id: 13, name: "Água", price: 30.0 },
+    { id: 14, name: "Água", price: 30.0 },
+    { id: 15, name: "Água", price: 30.0 },
+    { id: 16, name: "Água", price: 30.0 },
+    { id: 17, name: "Água", price: 30.0 },
+    { id: 18, name: "Água", price: 30.0 },
+    { id: 19, name: "Água", price: 30.0 },
+    { id: 20, name: "Água", price: 30.0 },
+    { id: 21, name: "Água", price: 30.0 },
+    { id: 22, name: "Água", price: 30.0 },
+    { id: 23, name: "Água", price: 30.0 },
+    { id: 24, name: "Água", price: 30.0 },
+    { id: 25, name: "Água", price: 30.0 },
+    { id: 26, name: "Água", price: 30.0 },
+    { id: 27, name: "Água", price: 30.0 },
+    { id: 28, name: "Água", price: 30.0 },
+    { id: 29, name: "Água", price: 30.0 },
+    { id: 30, name: "Água", price: 30.0 },
+    { id: 32, name: "Água", price: 30.0 },
+    { id: 33, name: "Água", price: 30.0 },
+    { id: 34, name: "Água", price: 30.0 },
+    { id: 35, name: "Água", price: 30.0 },
+    { id: 36, name: "Água", price: 30.0 },
+    { id: 37, name: "Água", price: 30.0 },
   ];
 
   const handleProductPress = (product) => {
@@ -226,9 +251,9 @@ const ComandaMesa = ({ navigation }) => {
                     <View style={styles.quantityContainer}>
                       <TouchableOpacity
                         onPress={decrementQuantity}
-                        style={styles.quantityButton}
+                        style={styles.quantitysubButton}
                       >
-                        <Text style={styles.quantityText}>-</Text>
+                        <Text style={styles.quantitysubText}>-</Text>
                       </TouchableOpacity>
                       <Text style={styles.quantityNumber}>{quantity}</Text>
                       <TouchableOpacity
@@ -262,7 +287,7 @@ const ComandaMesa = ({ navigation }) => {
                                     onPress={() =>
                                       decrementOptional(optional.id)
                                     }
-                                    style={styles.quantityButton}
+                                    style={styles.quantitysubButton}
                                   >
                                     <Text style={styles.quantityText}>-</Text>
                                   </TouchableOpacity>
@@ -450,7 +475,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  quantitysubButton: {
+    backgroundColor: "#FF6347",
+    borderRadius: 50,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   quantityText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  quantitysubText: {
     color: "#fff",
     fontSize: 24,
     fontWeight: "bold",

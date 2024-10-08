@@ -1,10 +1,10 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../src/screens/LoginScreen';
-import HomeScreen from '../src/screens/HomeScreen';
-import ProductScreen from '../src/screens/ProductScreen';
-import CustomHeader from '../src/components/CustomHeader';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "../src/screens/LoginScreen";
+import HomeScreen from "../src/screens/HomeScreen";
+import ProductScreen from "../src/screens/ProductScreen";
+import CustomHeader from "../src/components/CustomHeader";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +17,13 @@ const AppNavigator = () => {
           name="Login"
           component={LoginScreen}
           options={{
-            header: () => <CustomHeader title="Login" showMenu={false} iconName="person-outline" />, // Ícone de usuário
+            header: () => (
+              <CustomHeader
+                title="Login"
+                showMenu={false}
+                iconName="person-outline"
+              />
+            ), // Ícone de usuário
           }}
         />
         {/* Tela Home - Ícone de comanda */}
@@ -25,7 +31,14 @@ const AppNavigator = () => {
           name="Home"
           component={HomeScreen}
           options={({ navigation }) => ({
-            header: () => <CustomHeader title="Comandas" showMenu={true} navigation={navigation} iconName="document-text-outline" />, // Ícone de comanda
+            header: () => (
+              <CustomHeader
+                title="Comandas"
+                showMenu={true}
+                navigation={navigation}
+                iconName="document-text-outline"
+              />
+            ), // Ícone de comanda
           })}
         />
         {/* Tela Product - Sem ícone */}
