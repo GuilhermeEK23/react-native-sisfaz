@@ -109,7 +109,7 @@ const ConfirmarFechamento = ({ navigation }) => {
             <Text style={styles.modalTitle}>Adicionais</Text>
 
             {/* ScrollView para garantir o scroll nos adicionais */}
-            <ScrollView style={styles.adicionaisList}>
+            <ScrollView style={styles.adicionaisList} showsVerticalScrollIndicator={false}>
               {adicionais.map((adicional) => (
                 <View key={adicional.id} style={styles.tableRow}>
                   <Text style={styles.productName}>{adicional.name}</Text>
@@ -175,7 +175,7 @@ const ConfirmarFechamento = ({ navigation }) => {
       </View>
 
       {/* Tabela de Produtos */}
-      <ScrollView style={styles.tableContainer}>
+      <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
         {products.map((product) => (
           <View key={product.id} style={styles.tableRow}>
             <View style={styles.quantityControl}>

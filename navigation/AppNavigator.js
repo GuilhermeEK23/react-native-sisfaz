@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator initialRouteName="Login">
         {/* Tela de Login - Ícone de usuário */}
         <Stack.Screen

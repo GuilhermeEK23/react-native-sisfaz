@@ -36,7 +36,7 @@ const Conta = ({ navigation }) => {
       </View>
 
       {/* Tabela de Itens */}
-      <ScrollView style={styles.tableContainer}>
+      <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
         {items.map((item) => (
           <View key={item.id} style={styles.tableRow}>
             <Text style={styles.itemQuantity}>{item.quantity}</Text>

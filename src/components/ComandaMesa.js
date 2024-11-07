@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+// Importando os componentes personalizados
+import GroupList from "./GroupList";
+
 const { width, height } = Dimensions.get("window");
 
 const ComandaMesa = ({ navigation }) => {
@@ -158,7 +161,8 @@ const ComandaMesa = ({ navigation }) => {
           </View>
 
           {/* Grid de produtos */}
-          <ScrollView style={styles.productContainer}>
+          <ScrollView style={styles.productContainer} showsVerticalScrollIndicator={false}>
+          <TouchableWithoutFeedback>
             <View style={styles.productGrid}>
               {staticProducts
                 .filter((product) =>
@@ -174,58 +178,9 @@ const ComandaMesa = ({ navigation }) => {
                   </TouchableOpacity>
                 ))}
             </View>
+          </TouchableWithoutFeedback>
           </ScrollView>
-
-          {/* Grupos dentro do container */}
-          <View style={styles.groupContainer}>
-            <ScrollView
-              horizontal
-              style={styles.groupScroll}
-              showsHorizontalScrollIndicator={false}
-            >
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="glass-cocktail" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Drinks</Text>
-              </View>
-
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="glass-mug" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Sucos</Text>
-              </View>
-
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="bottle-soda" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Refri</Text>
-              </View>
-
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="beer" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Cervejas</Text>
-              </View>
-
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="cup-water" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Água/Café</Text>
-              </View>
-
-              <View style={styles.groupItemContainer}>
-                <TouchableOpacity style={styles.groupItem}>
-                  <Icon name="ice-cream" size={30} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.groupText}>Sorvetes</Text>
-              </View>
-            </ScrollView>
-          </View>
+          <GroupList />
         </View>
 
         {/* Modal para o produto selecionado */}
@@ -375,18 +330,18 @@ const styles = StyleSheet.create({
   },
   contentArea: {
     flex: 1,
-    paddingHorizontal: 10, // Ajustado para melhor espaçamento
-    paddingVertical: 10,
     backgroundColor: "#f5f5f5", // Fundo para melhor visualização
   },
   productContainer: {
     flex: 1,
     marginTop: 10,
+    paddingHorizontal: 20, // Ajustado para melhor espaçamento
   },
   productGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    gap: 15,
   },
   productSquare: {
     backgroundColor: "#5B9A55",
@@ -402,29 +357,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
   },
-  groupContainer: {
-    paddingVertical: 10,
-    borderTopWidth: 2,
-    borderTopColor: "#00000020",
-    marginTop: 10,
-  },
-  groupScroll: {
-    paddingVertical: 5,
-  },
-  groupItemContainer: {
-    alignItems: "center",
-    width: 70, // Aumentado para melhor acomodar o texto
-    marginHorizontal: 5,
-  },
-  groupItem: {
-    width: 57,
-    height: 60,
-    backgroundColor: "#5B9A55",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    marginHorizontal: 5,
-  },
+
   groupText: {
     color: "#000",
     textAlign: "center",
@@ -435,7 +368,6 @@ const styles = StyleSheet.create({
   },
   squareContainer: {
     flex: 1,
-    marginHorizontal: 10,
   },
   modalOverlay: {
     flexGrow: 1,
