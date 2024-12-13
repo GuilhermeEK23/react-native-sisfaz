@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Menu, Provider } from "react-native-paper";
+import { HeaderContext } from "./HeaderContext";
 
 const CustomHeader = ({
   title,
@@ -20,18 +21,17 @@ const CustomHeader = ({
   showBackButton = false,
   iconName = null,
 }) => {
-  const [visible, setVisible] = useState(false);
-
-  // Abre o menu
-  const openMenu = () => setVisible(true);
-
-  // Fecha o menu
-  const closeMenu = () => setVisible(false);
+  const { isMenuHeader, handleMenuHeader, resetMenuHeader } =
+    useContext(HeaderContext);
 
   return (
     <Provider>
       {/* Ao clicar fora do menu, ele será fechado */}
-      <TouchableWithoutFeedback onPress={closeMenu}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          resetMenuHeader();
+        }}
+      >
         <View style={{ flex: 1 }}>
           <StatusBar
             barStyle={
@@ -76,10 +76,10 @@ const CustomHeader = ({
               {/* Menu de opções */}
               {showMenu && (
                 <Menu
-                  visible={visible}
-                  onDismiss={closeMenu} // Fecha o menu ao clicar fora dele ou ao abrir o menu novamente
+                  visible={isMenuHeader}
+                  onDismiss={resetMenuHeader} // Fecha o menu ao clicar fora dele ou ao abrir o menu novamente
                   anchor={
-                    <TouchableOpacity onPress={openMenu}>
+                    <TouchableOpacity onPress={handleMenuHeader}>
                       <Ionicons
                         name="ellipsis-vertical"
                         size={24}
@@ -88,14 +88,9 @@ const CustomHeader = ({
                     </TouchableOpacity>
                   }
                 >
-                  <Menu.Item onPress={onLogoutPress} title="Sair" />
-                  {/* Botão de fechar (ícone "X") */}
                   <Menu.Item
-                    onPress={closeMenu}
-                    title="Fechar"
-                    icon={() => (
-                      <Ionicons name="close" size={20} color="#000" />
-                    )}
+                    onPress={() => onLogoutPress(navigation)}
+                    title="Sair"
                   />
                 </Menu>
               )}

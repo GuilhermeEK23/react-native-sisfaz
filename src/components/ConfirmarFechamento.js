@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,13 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { HeaderContext } from "./HeaderContext";
 
 const ConfirmarFechamento = ({ navigation }) => {
+  const { resetMenuHeader } = useContext(HeaderContext);
   const [products, setProducts] = useState([
     { id: 1, name: "Coca Cola", quantity: 1 },
     { id: 2, name: "Água com Gás", quantity: 1 },
@@ -91,123 +94,136 @@ const ConfirmarFechamento = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.contentArea}>
-      {/* Modal de Adicionais */}
-      <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          {/* O TouchableWithoutFeedback captura o toque fora do modal */}
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-            <View style={styles.modalDismissArea} />
-          </TouchableWithoutFeedback>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetMenuHeader();
+      }}
+    >
+      <View style={styles.contentArea}>
+        {/* Modal de Adicionais */}
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalBackground}>
+            {/* O TouchableWithoutFeedback captura o toque fora do modal */}
+            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+              <View style={styles.modalDismissArea} />
+            </TouchableWithoutFeedback>
 
-          {/* Conteúdo do modal */}
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Adicionais</Text>
+            {/* Conteúdo do modal */}
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Adicionais</Text>
 
-            {/* ScrollView para garantir o scroll nos adicionais */}
-            <ScrollView style={styles.adicionaisList} showsVerticalScrollIndicator={false}>
-              {adicionais.map((adicional) => (
-                <View key={adicional.id} style={styles.tableRow}>
-                  <Text style={styles.productName}>{adicional.name}</Text>
-                  <View style={styles.quantityControl}>
-                    <TouchableOpacity
-                      style={styles.decrementButton}
-                      onPress={() => handleAdicionalDecrement(adicional.id)}
-                    >
-                      <Text style={styles.controlText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>
-                      {adicional.quantity}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.incrementButton}
-                      onPress={() => handleAdicionalIncrement(adicional.id)}
-                    >
-                      <Text style={styles.controlText}>+</Text>
-                    </TouchableOpacity>
+              {/* ScrollView para garantir o scroll nos adicionais */}
+              <ScrollView
+                style={styles.adicionaisList}
+                showsVerticalScrollIndicator={false}
+              >
+                {adicionais.map((adicional) => (
+                  <View key={adicional.id} style={styles.tableRow}>
+                    <Text style={styles.productName}>{adicional.name}</Text>
+                    <View style={styles.quantityControl}>
+                      <TouchableOpacity
+                        style={styles.decrementButton}
+                        onPress={() => handleAdicionalDecrement(adicional.id)}
+                      >
+                        <Text style={styles.controlText}>-</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.quantityText}>
+                        {adicional.quantity}
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.incrementButton}
+                        onPress={() => handleAdicionalIncrement(adicional.id)}
+                      >
+                        <Text style={styles.controlText}>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </ScrollView>
+                ))}
+              </ScrollView>
 
-            <TouchableOpacity
-              style={styles.closeModalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeModalText}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Linha de Total e Botões */}
-      <View style={styles.totalRow}>
-        <Text style={styles.totalText}>Total: R$ 150,00</Text>
-
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            style={styles.adicionaisButton}
-            onPress={() => setModalVisible(true)}
-          >
-            <Icon name="plus" size={15} color="#fff" />
-            <Text style={styles.adicionaisText}>Adicionais</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.sendButton}>
-            <Icon name="send" size={15} color="#fff" />
-            <Text style={styles.sendText}>Enviar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Divider entre Total e Tabela */}
-      <View style={styles.divider} />
-
-      {/* Cabeçalho da Tabela */}
-      <View style={styles.headerRow}>
-        <Text style={styles.headerText}>Qtde.</Text>
-        <Text style={styles.headerText}>Nome</Text>
-        <Text style={styles.headerText}>Apagar</Text>
-      </View>
-
-      {/* Tabela de Produtos */}
-      <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
-        {products.map((product) => (
-          <View key={product.id} style={styles.tableRow}>
-            <View style={styles.quantityControl}>
               <TouchableOpacity
-                style={styles.decrementButton}
-                onPress={() => handleDecrement(product.id)}
+                style={styles.closeModalButton}
+                onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.controlText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantityText}>{product.quantity}</Text>
-              <TouchableOpacity
-                style={styles.incrementButton}
-                onPress={() => handleIncrement(product.id)}
-              >
-                <Text style={styles.controlText}>+</Text>
+                <Text style={styles.closeModalText}>Fechar</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </Modal>
 
-            {/* Nome Centralizado */}
-            <Text style={styles.productName}>{product.name}</Text>
+        {/* Linha de Total e Botões */}
+        <View style={styles.totalRow}>
+          <Text style={styles.totalText}>Total: R$ 150,00</Text>
 
-            {/* Ícone de Lixeira Distanciado da Borda */}
+          <View style={styles.buttonGroup}>
             <TouchableOpacity
-              style={styles.trashIcon}
-              onPress={() => handleRemove(product.id)}
+              style={styles.adicionaisButton}
+              onPress={() => setModalVisible(true)}
             >
-              <Icon name="trash-can-outline" size={24} color="#888" />
+              <Icon name="plus" size={15} color="#fff" />
+              <Text style={styles.adicionaisText}>Adicionais</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.sendButton}>
+              <Icon name="send" size={15} color="#fff" />
+              <Text style={styles.sendText}>Enviar</Text>
             </TouchableOpacity>
           </View>
-        ))}
-      </ScrollView>
-    </View>
+        </View>
+
+        {/* Divider entre Total e Tabela */}
+        <View style={styles.divider} />
+
+        {/* Cabeçalho da Tabela */}
+        <View style={styles.headerRow}>
+          <Text style={styles.headerText}>Qtde.</Text>
+          <Text style={styles.headerText}>Nome</Text>
+          <Text style={styles.headerText}>Apagar</Text>
+        </View>
+
+        {/* Tabela de Produtos */}
+        <ScrollView
+          style={styles.tableContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {products.map((product) => (
+            <View key={product.id} style={styles.tableRow}>
+              <View style={styles.quantityControl}>
+                <TouchableOpacity
+                  style={styles.decrementButton}
+                  onPress={() => handleDecrement(product.id)}
+                >
+                  <Text style={styles.controlText}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.quantityText}>{product.quantity}</Text>
+                <TouchableOpacity
+                  style={styles.incrementButton}
+                  onPress={() => handleIncrement(product.id)}
+                >
+                  <Text style={styles.controlText}>+</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Nome Centralizado */}
+              <Text style={styles.productName}>{product.name}</Text>
+
+              {/* Ícone de Lixeira Distanciado da Borda */}
+              <TouchableOpacity
+                style={styles.trashIcon}
+                onPress={() => handleRemove(product.id)}
+              >
+                <Icon name="trash-can-outline" size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -1,51 +1,65 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { HeaderContext } from "./HeaderContext";
 
 const Conta = ({ navigation }) => {
+  const { resetMenuHeader } = useContext(HeaderContext);
   const [items, setItems] = useState([
     { id: 1, name: "Coca Cola", quantity: 1, total: 12.0 },
     { id: 2, name: "Água com Gás", quantity: 1, total: 6.5 },
   ]);
 
   return (
-    <View style={styles.contentArea}>
-      {/* Linha de Total e Botão de Imprimir Conta */}
-      <View style={styles.totalRow}>
-        <Text style={styles.totalText}>Total: R$ 18,50</Text>
-        <TouchableOpacity style={styles.printButton}>
-          <Icon name="printer" size={20} color="#fff" />
-          <Text style={styles.printText}>Imprimir Conta</Text>
-        </TouchableOpacity>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetMenuHeader();
+      }}
+    >
+      <View style={styles.contentArea}>
+        {/* Linha de Total e Botão de Imprimir Conta */}
+        <View style={styles.totalRow}>
+          <Text style={styles.totalText}>Total: R$ 18,50</Text>
+          <TouchableOpacity style={styles.printButton}>
+            <Icon name="printer" size={20} color="#fff" />
+            <Text style={styles.printText}>Imprimir Conta</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Divider entre Total e Tabela */}
+        <View style={styles.divider} />
+
+        {/* Cabeçalho da Tabela */}
+        <View style={styles.headerRow}>
+          <Text style={styles.headerText}>Qtde.</Text>
+          <Text style={styles.headerText}>Nome</Text>
+          <Text style={styles.headerText}>Total</Text>
+        </View>
+
+        {/* Tabela de Itens */}
+        <ScrollView
+          style={styles.tableContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {items.map((item) => (
+            <View key={item.id} style={styles.tableRow}>
+              <Text style={styles.itemQuantity}>{item.quantity}</Text>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemTotal}>R$ {item.total.toFixed(2)}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
-
-      {/* Divider entre Total e Tabela */}
-      <View style={styles.divider} />
-
-      {/* Cabeçalho da Tabela */}
-      <View style={styles.headerRow}>
-        <Text style={styles.headerText}>Qtde.</Text>
-        <Text style={styles.headerText}>Nome</Text>
-        <Text style={styles.headerText}>Total</Text>
-      </View>
-
-      {/* Tabela de Itens */}
-      <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
-        {items.map((item) => (
-          <View key={item.id} style={styles.tableRow}>
-            <Text style={styles.itemQuantity}>{item.quantity}</Text>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemTotal}>R$ {item.total.toFixed(2)}</Text>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

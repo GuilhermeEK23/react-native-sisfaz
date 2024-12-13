@@ -12,14 +12,24 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import UserServices from "../services/UserServices";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Lógica de login
-    navigation.navigate("Home");
+  const handleLogin = async () => {
+    if (username.trim().length < 1 || password.length < 1) {
+      return alert("Preencha todos os campos.");
+    }
+    const user = await UserServices.login(username.trim(), password);
+
+    if (user === undefined || user === null) {
+      return alert("Usuário não encontrado ou senha incorreta.");
+    }
+    setUsername("");
+    setPassword("");
+    navigation.navigate("Home", { user });
   };
 
   return (

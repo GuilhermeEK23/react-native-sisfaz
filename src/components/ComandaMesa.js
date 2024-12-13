@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -15,10 +15,12 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Importando os componentes personalizados
 import GroupList from "./GroupList";
+import { HeaderContext } from "./HeaderContext";
 
 const { width, height } = Dimensions.get("window");
 
 const ComandaMesa = ({ navigation }) => {
+  const { resetMenuHeader } = useContext(HeaderContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [observationTerm, setObservationTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -143,7 +145,12 @@ const ComandaMesa = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetMenuHeader();
+      }}
+    >
       <View style={styles.contentArea}>
         <View style={styles.squareContainer}>
           {/* Search input com ícone de pesquisa fora do input */}
@@ -161,24 +168,34 @@ const ComandaMesa = ({ navigation }) => {
           </View>
 
           {/* Grid de produtos */}
-          <ScrollView style={styles.productContainer} showsVerticalScrollIndicator={false}>
-          <TouchableWithoutFeedback>
-            <View style={styles.productGrid}>
-              {staticProducts
-                .filter((product) =>
-                  product.name.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((product) => (
-                  <TouchableOpacity
-                    key={product.id}
-                    style={styles.productSquare}
-                    onPress={() => handleProductPress(product)}
-                  >
-                    <Text style={styles.productText}>{product.name}</Text>
-                  </TouchableOpacity>
-                ))}
-            </View>
-          </TouchableWithoutFeedback>
+          <ScrollView
+            style={styles.productContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+                resetMenuHeader();
+              }}
+            >
+              <View style={styles.productGrid}>
+                {staticProducts
+                  .filter((product) =>
+                    product.name
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  )
+                  .map((product) => (
+                    <TouchableOpacity
+                      key={product.id}
+                      style={styles.productSquare}
+                      onPress={() => handleProductPress(product)}
+                    >
+                      <Text style={styles.productText}>{product.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            </TouchableWithoutFeedback>
           </ScrollView>
           <GroupList />
         </View>

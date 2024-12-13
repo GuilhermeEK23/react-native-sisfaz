@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,12 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient"; // Importando o gradiente
 import { Ionicons } from "@expo/vector-icons"; // Importando os ícones
+import { HeaderContext } from "../components/HeaderContext";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
+  const { resetMenuHeader } = useContext(HeaderContext);
+  const { user } = route.params;
+  console.log(user);
   const [comanda, setComanda] = useState("");
 
   const handleCreateComanda = () => {
@@ -25,7 +29,12 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        resetMenuHeader();
+      }}
+    >
       <LinearGradient
         colors={["rgb(91, 154, 85)", "rgba(0, 0, 0, 0.84)"]} // Gradiente igual da tela de login
         style={styles.gradient}

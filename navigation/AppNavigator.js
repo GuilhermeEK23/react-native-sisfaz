@@ -9,8 +9,14 @@ import CustomHeader from "../src/components/CustomHeader";
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
+  const onLogoutPress = (navigation) => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
+  };
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {/* Tela de Login - Ícone de usuário */}
         <Stack.Screen
@@ -34,6 +40,7 @@ const AppNavigator = () => {
             header: () => (
               <CustomHeader
                 title="Comandas"
+                onLogoutPress={onLogoutPress}
                 showMenu={true}
                 navigation={navigation}
                 iconName="document-text-outline"
@@ -49,6 +56,7 @@ const AppNavigator = () => {
             header: () => (
               <CustomHeader
                 title="Produtos/Lançamentos"
+                onLogoutPress={onLogoutPress}
                 showMenu={true}
                 navigation={navigation}
                 showBackButton={true} // Sem ícone adicional
