@@ -7,10 +7,7 @@ import {
 } from "react-native";
 import GroupItem from "./GroupItem";
 import SubGroupList from "./SubGroupList";
-import {
-  fetchGroupsFromDatabase,
-  fetchSubGroupsFromDatabase,
-} from "./fetchGroupsFromDatabase";
+import { requestGroups, requestSubGroups } from "../services/GroupServices";
 
 const GroupList = () => {
   const [groups, setGroups] = useState([]);
@@ -19,7 +16,7 @@ const GroupList = () => {
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const response = await fetchGroupsFromDatabase();
+      const response = await requestGroups();
       setGroups(response);
     };
 
@@ -34,7 +31,7 @@ const GroupList = () => {
     } else {
       // Seleciona novo grupo e carrega os subgrupos
       setSelectedGroup(group.id);
-      const response = await fetchSubGroupsFromDatabase(group.id);
+      const response = await requestSubGroups(group.id);
       setSubGroups(response);
     }
   };

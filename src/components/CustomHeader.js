@@ -46,7 +46,10 @@ const CustomHeader = ({
                 {showBackButton && (
                   <>
                     <TouchableOpacity
-                      onPress={() => navigation.goBack()}
+                      onPress={() => {
+                        resetMenuHeader();
+                        navigation.goBack();
+                      }}
                       style={styles.backButton}
                     >
                       <Ionicons

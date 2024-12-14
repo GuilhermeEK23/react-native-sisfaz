@@ -3,7 +3,11 @@ import dataConnection from "../connection-api.json";
 export default UserServices = {
   login: async (username, password) => {
     try {
-      const response = await fetch(
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out")), 1500)
+      );
+
+      const fetchRequest = fetch(
         `http://${dataConnection.url}:${dataConnection.port}/user?Username=${username}&Password=${password}`,
         {
           method: "GET",
@@ -12,14 +16,20 @@ export default UserServices = {
           },
         }
       );
+
+      const response = await Promise.race([fetchRequest, timeout]);
+
       const dataFetch = await response.json();
+
       if (dataFetch.status === 404) {
-        return null;
+        alert("Usuário não encontrado ou senha incorreta.");
       }
 
       return dataFetch.detail.result[0];
     } catch (error) {
-      throw error;
+      if (error.message === "Request timed out") {
+        alert("Sem conexão com o servidor.");
+      }
     }
   },
 };

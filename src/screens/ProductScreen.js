@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,12 +6,15 @@ import {
   Text,
   Platform,
   StatusBar,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 import ComandaMesa from "../components/ComandaMesa";
 import ConfirmarFechamento from "../components/ConfirmarFechamento";
 import Conta from "../components/Conta";
+import { HeaderContext } from "../components/HeaderContext";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,7 +31,12 @@ const CustomTabLabel = ({ label, comandaNumber, focused }) => (
   </View>
 );
 
-const ProductScreen = () => {
+const ProductScreen = ({ route }) => {
+  const { isMenuHeader, resetMenuHeader } = useContext(HeaderContext);
+  const { comanda, user } = route.params;
+  console.log("Comanda:", comanda);
+  console.log("User:", user.Name);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <LinearGradient
@@ -55,7 +63,7 @@ const ProductScreen = () => {
                 tabBarLabel: ({ focused }) => (
                   <CustomTabLabel
                     label="Comanda"
-                    comandaNumber={100}
+                    comandaNumber={comanda}
                     focused={focused}
                   />
                 ),
@@ -68,6 +76,17 @@ const ProductScreen = () => {
             <Tab.Screen name="Conta" component={Conta} />
           </Tab.Navigator>
         </View>
+        {/* Camada de bloqueio quando o menu está aberto */}
+        {isMenuHeader && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+              resetMenuHeader();
+            }}
+          >
+            <View style={styles.overlayMenu} />
+          </TouchableWithoutFeedback>
+        )}
       </LinearGradient>
     </SafeAreaView>
   );
@@ -126,6 +145,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 4, // Indicador mais grosso
     borderRadius: 2, // Borda arredondada para o indicador
+  },
+  overlayMenu: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 10, // Certifique-se de que esteja acima de outros elementos
   },
 });
 

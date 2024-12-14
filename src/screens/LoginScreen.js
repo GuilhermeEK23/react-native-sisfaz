@@ -9,6 +9,7 @@ import {
   Image,
   Keyboard,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,16 +18,21 @@ import UserServices from "../services/UserServices";
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     if (username.trim().length < 1 || password.length < 1) {
       return alert("Preencha todos os campos.");
     }
+    setIsLoading(true);
     const user = await UserServices.login(username.trim(), password);
 
+    setIsLoading(false);
+
     if (user === undefined || user === null) {
-      return alert("Usuário não encontrado ou senha incorreta.");
+      return;
     }
+
     setUsername("");
     setPassword("");
     navigation.navigate("Home", { user });
@@ -88,8 +94,15 @@ const LoginScreen = ({ navigation }) => {
                 />
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Entrar</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={!isLoading ? handleLogin : null}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <Text style={styles.buttonText}>Entrar</Text>
+                )}
               </TouchableOpacity>
             </View>
           </LinearGradient>

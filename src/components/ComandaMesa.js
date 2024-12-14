@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Dimensions,
-  Keyboard,
   TouchableWithoutFeedback,
   Modal,
 } from "react-native";
@@ -15,12 +13,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Importando os componentes personalizados
 import GroupList from "./GroupList";
-import { HeaderContext } from "./HeaderContext";
-
-const { width, height } = Dimensions.get("window");
+import { ProductItem } from "./ProductItem";
 
 const ComandaMesa = ({ navigation }) => {
-  const { resetMenuHeader } = useContext(HeaderContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [observationTerm, setObservationTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -145,177 +140,153 @@ const ComandaMesa = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-        resetMenuHeader();
-      }}
-    >
-      <View style={styles.contentArea}>
-        <View style={styles.squareContainer}>
-          {/* Search input com ícone de pesquisa fora do input */}
-          <View style={styles.searchContainer}>
-            <TouchableOpacity style={styles.searchIconWrapper}>
-              <Icon name="magnify" size={24} color="#5B9A55" />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              placeholder="Pesquisar produtos..."
-              placeholderTextColor="#888"
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-            />
-          </View>
-
-          {/* Grid de produtos */}
-          <ScrollView
-            style={styles.productContainer}
-            showsVerticalScrollIndicator={false}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => {
-                Keyboard.dismiss();
-                resetMenuHeader();
-              }}
-            >
-              <View style={styles.productGrid}>
-                {staticProducts
-                  .filter((product) =>
-                    product.name
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase())
-                  )
-                  .map((product) => (
-                    <TouchableOpacity
-                      key={product.id}
-                      style={styles.productSquare}
-                      onPress={() => handleProductPress(product)}
-                    >
-                      <Text style={styles.productText}>{product.name}</Text>
-                    </TouchableOpacity>
-                  ))}
-              </View>
-            </TouchableWithoutFeedback>
-          </ScrollView>
-          <GroupList />
+    <View style={styles.contentArea}>
+      <View style={styles.squareContainer}>
+        {/* Search input com ícone de pesquisa fora do input */}
+        <View style={styles.searchContainer}>
+          <TouchableOpacity style={styles.searchIconWrapper}>
+            <Icon name="magnify" size={24} color="#5B9A55" />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            placeholder="Pesquisar produtos..."
+            placeholderTextColor="#888"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </View>
 
-        {/* Modal para o produto selecionado */}
-        {selectedProduct && (
-          <Modal
-            animationType="none"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={handleCloseModal}
-          >
-            <TouchableWithoutFeedback onPress={handleCloseModal}>
-              <View style={styles.modalOverlay}>
-                <TouchableWithoutFeedback onPress={() => {}}>
-                  <View style={[styles.modalContainer, { top: "10%" }]}>
-                    <Text style={styles.modalTitle}>
-                      {selectedProduct.name}
-                    </Text>
-                    <Text style={styles.modalPrice}>
-                      R$ {selectedProduct.price.toFixed(2)}
-                    </Text>
-
-                    {/* Controle de quantidade */}
-                    <View style={styles.quantityContainer}>
-                      <TouchableOpacity
-                        onPress={decrementQuantity}
-                        style={styles.quantitysubButton}
-                      >
-                        <Text style={styles.quantitysubText}>-</Text>
-                      </TouchableOpacity>
-                      <Text style={styles.quantityNumber}>{quantity}</Text>
-                      <TouchableOpacity
-                        onPress={incrementQuantity}
-                        style={styles.quantityButton}
-                      >
-                        <Text style={styles.quantityText}>+</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    <Text style={styles.totalText}>
-                      Total: R$ {calculateTotal()}
-                    </Text>
-
-                    {/* Opcionais */}
-                    {optionalsVisible && (
-                      <ScrollView style={styles.optionalsContainer}>
-                        <View style={styles.optionalsContainer}>
-                          <Text style={styles.optionalsTitle}>Opcionais</Text>
-                          {optionals.map((optional) => (
-                            <TouchableWithoutFeedback key={optional.id}>
-                              <View style={styles.optionalRow}>
-                                <Text style={styles.optionalName}>
-                                  {optional.name}
-                                </Text>
-                                <Text style={styles.optionalPrice}>
-                                  R$ {optional.price.toFixed(2)}
-                                </Text>
-                                <View style={styles.quantityContainer}>
-                                  <TouchableOpacity
-                                    onPress={() =>
-                                      decrementOptional(optional.id)
-                                    }
-                                    style={styles.quantitysubButton}
-                                  >
-                                    <Text style={styles.quantityText}>-</Text>
-                                  </TouchableOpacity>
-                                  <Text style={styles.quantityNumber}>
-                                    {optional.quantity}
-                                  </Text>
-                                  <TouchableOpacity
-                                    onPress={() =>
-                                      incrementOptional(optional.id)
-                                    }
-                                    style={styles.quantityButton}
-                                  >
-                                    <Text style={styles.quantityText}>+</Text>
-                                  </TouchableOpacity>
-                                </View>
-                              </View>
-                            </TouchableWithoutFeedback>
-                          ))}
-
-                          {/* Input de observações */}
-                          <TextInput
-                            style={styles.observationsInput}
-                            placeholder="Observações (opcional)"
-                            placeholderTextColor="#888"
-                            value={observationTerm}
-                            onChangeText={setObservationTerm}
-                          />
-                        </View>
-                      </ScrollView>
-                    )}
-
-                    {/* Botões */}
-                    <View style={styles.buttonRow}>
-                      <TouchableOpacity
-                        onPress={handleOptionals}
-                        style={styles.optionalsButton}
-                      >
-                        <Text style={styles.optionalsButtonText}>
-                          Opcionais
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={handleAddToCart}
-                        style={styles.addButton}
-                      >
-                        <Text style={styles.addButtonText}>Adicionar</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        )}
+        {/* Grid de produtos */}
+        <ScrollView
+          style={styles.productContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <TouchableWithoutFeedback>
+            <View style={styles.productGrid}>
+              {staticProducts
+                .filter((product) =>
+                  product.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((product, key) => (
+                  <ProductItem
+                    key={key}
+                    product={product}
+                    handleProductPress={handleProductPress}
+                  />
+                ))}
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+        <GroupList />
       </View>
-    </TouchableWithoutFeedback>
+
+      {/* Modal para o produto selecionado */}
+      {selectedProduct && (
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={handleCloseModal}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseModal}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View style={[styles.modalContainer, { top: "10%" }]}>
+                  <Text style={styles.modalTitle}>{selectedProduct.name}</Text>
+                  <Text style={styles.modalPrice}>
+                    R$ {selectedProduct.price.toFixed(2)}
+                  </Text>
+
+                  {/* Controle de quantidade */}
+                  <View style={styles.quantityContainer}>
+                    <TouchableOpacity
+                      onPress={decrementQuantity}
+                      style={styles.quantitysubButton}
+                    >
+                      <Text style={styles.quantitysubText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantityNumber}>{quantity}</Text>
+                    <TouchableOpacity
+                      onPress={incrementQuantity}
+                      style={styles.quantityButton}
+                    >
+                      <Text style={styles.quantityText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <Text style={styles.totalText}>
+                    Total: R$ {calculateTotal()}
+                  </Text>
+
+                  {/* Opcionais */}
+                  {optionalsVisible && (
+                    <ScrollView style={styles.optionalsContainer}>
+                      <View style={styles.optionalsContainer}>
+                        <Text style={styles.optionalsTitle}>Opcionais</Text>
+                        {optionals.map((optional) => (
+                          <TouchableWithoutFeedback key={optional.id}>
+                            <View style={styles.optionalRow}>
+                              <Text style={styles.optionalName}>
+                                {optional.name}
+                              </Text>
+                              <Text style={styles.optionalPrice}>
+                                R$ {optional.price.toFixed(2)}
+                              </Text>
+                              <View style={styles.quantityContainer}>
+                                <TouchableOpacity
+                                  onPress={() => decrementOptional(optional.id)}
+                                  style={styles.quantitysubButton}
+                                >
+                                  <Text style={styles.quantityText}>-</Text>
+                                </TouchableOpacity>
+                                <Text style={styles.quantityNumber}>
+                                  {optional.quantity}
+                                </Text>
+                                <TouchableOpacity
+                                  onPress={() => incrementOptional(optional.id)}
+                                  style={styles.quantityButton}
+                                >
+                                  <Text style={styles.quantityText}>+</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </TouchableWithoutFeedback>
+                        ))}
+
+                        {/* Input de observações */}
+                        <TextInput
+                          style={styles.observationsInput}
+                          placeholder="Observações (opcional)"
+                          placeholderTextColor="#888"
+                          value={observationTerm}
+                          onChangeText={setObservationTerm}
+                        />
+                      </View>
+                    </ScrollView>
+                  )}
+
+                  {/* Botões */}
+                  <View style={styles.buttonRow}>
+                    <TouchableOpacity
+                      onPress={handleOptionals}
+                      style={styles.optionalsButton}
+                    >
+                      <Text style={styles.optionalsButtonText}>Opcionais</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleAddToCart}
+                      style={styles.addButton}
+                    >
+                      <Text style={styles.addButtonText}>Adicionar</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      )}
+    </View>
   );
 };
 
@@ -359,20 +330,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     gap: 15,
-  },
-  productSquare: {
-    backgroundColor: "#5B9A55",
-    width: width / 4.5 - 15,
-    height: width / 4.5 - 15,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  productText: {
-    color: "#fff",
-    textAlign: "center",
-    fontSize: 14,
   },
 
   groupText: {

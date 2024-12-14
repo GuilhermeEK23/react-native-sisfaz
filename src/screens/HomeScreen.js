@@ -13,14 +13,23 @@ import { Ionicons } from "@expo/vector-icons"; // Importando os ícones
 import { HeaderContext } from "../components/HeaderContext";
 
 const HomeScreen = ({ route, navigation }) => {
-  const { resetMenuHeader } = useContext(HeaderContext);
+  const { isMenuHeader, resetMenuHeader } = useContext(HeaderContext);
   const { user } = route.params;
-  console.log(user);
-  const [comanda, setComanda] = useState("");
+  const [comanda, setComanda] = useState(0);
 
   const handleCreateComanda = () => {
-    console.log(`Comanda/Mesa: ${comanda}`);
-    navigation.navigate("Product");
+    if (comanda > 0) {
+      navigation.navigate("Product", { comanda, user });
+    } else {
+      alert("Por favor, insira um número de comanda válido.");
+    }
+  };
+
+  const validateComanda = (text) => {
+    const filteredText = text.replace(/[^0-9]/g, "");
+    if (filteredText.length <= 4) {
+      setComanda(filteredText);
+    }
   };
 
   const handleEnter = () => {
@@ -29,12 +38,7 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-        resetMenuHeader();
-      }}
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <LinearGradient
         colors={["rgb(91, 154, 85)", "rgba(0, 0, 0, 0.84)"]} // Gradiente igual da tela de login
         style={styles.gradient}
@@ -55,7 +59,7 @@ const HomeScreen = ({ route, navigation }) => {
                 placeholder="Digite o número da comanda"
                 placeholderTextColor="#888"
                 value={comanda}
-                onChangeText={setComanda}
+                onChangeText={validateComanda}
                 keyboardType="numeric" // Exibe teclado numérico em Android e iOS
               />
             </View>
@@ -69,6 +73,17 @@ const HomeScreen = ({ route, navigation }) => {
             <Text style={styles.buttonText}>Abrir Comanda</Text>
           </TouchableOpacity>
         </View>
+        {/* Camada de bloqueio quando o menu está aberto */}
+        {isMenuHeader && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+              resetMenuHeader();
+            }}
+          >
+            <View style={styles.overlayMenu} />
+          </TouchableWithoutFeedback>
+        )}
       </LinearGradient>
     </TouchableWithoutFeedback>
   );
@@ -136,6 +151,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  overlayMenu: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 10, // Certifique-se de que esteja acima de outros elementos
   },
 });
 
