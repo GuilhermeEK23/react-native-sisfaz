@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Text,
   View,
   ScrollView,
   StyleSheet,
@@ -7,33 +8,48 @@ import {
 } from "react-native";
 import GroupItem from "./GroupItem";
 import SubGroupList from "./SubGroupList";
-import { requestGroups, requestSubGroups } from "../services/GroupServices";
+import GroupServices from "../services/GroupServices";
 
 const GroupList = () => {
+  const [allGroups, setAllGroups] = useState([]);
   const [groups, setGroups] = useState([]);
   const [subGroups, setSubGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroupHasSubGroup, setSelectedGroupHasSubGroup] =
+    useState(false);
 
   useEffect(() => {
-    const fetchGroups = async () => {
-      const response = await requestGroups();
-      setGroups(response);
+    const fetchAllGroups = async () => {
+      const allGroups = await GroupServices.requestAllGroups();
+      setAllGroups(allGroups);
     };
 
-    fetchGroups();
+    fetchAllGroups();
   }, []);
 
-  const handleGroupClick = async (group) => {
-    if (selectedGroup === group.id) {
+  useEffect(() => {
+    const groups = GroupServices.filterGroups(allGroups);
+    setGroups(groups);
+  }, [allGroups]);
+
+  const handleGroupClick = (group) => {
+    if (selectedGroup === group.IdGroup) {
       // Fecha os subgrupos se o grupo já estiver selecionado
       setSelectedGroup(null);
       setSubGroups([]);
     } else {
       // Seleciona novo grupo e carrega os subgrupos
-      setSelectedGroup(group.id);
-      const response = await requestSubGroups(group.id);
-      setSubGroups(response);
+      setSelectedGroup(group.IdGroup);
+      const subGroups = GroupServices.filterSubGroups(allGroups, group.IdGroup);
+      if (subGroups.length > 0) {
+        setSelectedGroupHasSubGroup(true);
+        setSubGroups(subGroups);
+      } else setSelectedGroupHasSubGroup(false);
     }
+  };
+
+  const handleSubGroupClick = (subGroup) => {
+    setSelectedGroup(subGroup.IdGroup);
   };
 
   const handleCloseSubGroups = () => {
@@ -44,9 +60,13 @@ const GroupList = () => {
 
   return (
     <View style={styles.container}>
-      {selectedGroup && (
+      {selectedGroup && selectedGroupHasSubGroup && (
         <>
-          <SubGroupList subGroups={subGroups} onClose={handleCloseSubGroups} />
+          <SubGroupList
+            subGroups={subGroups}
+            onClose={handleCloseSubGroups}
+            handleSubGroupClick={handleSubGroupClick}
+          />
           <View style={styles.divider} />
         </>
       )}
@@ -59,13 +79,17 @@ const GroupList = () => {
       >
         <TouchableWithoutFeedback>
           <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
-            {groups.map((group) => (
-              <GroupItem
-                key={group.id}
-                group={group}
-                onPress={handleGroupClick}
-              />
-            ))}
+            {groups.length > 0 ? (
+              groups.map((group) => (
+                <GroupItem
+                  key={group.IdGroup}
+                  group={group}
+                  onPress={handleGroupClick}
+                />
+              ))
+            ) : (
+              <Text>Nenhum grupo encontrado</Text>
+            )}
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>

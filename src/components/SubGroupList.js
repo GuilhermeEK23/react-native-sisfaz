@@ -8,8 +8,9 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import GroupItem from "./GroupItem";
 
-const SubGroupList = ({ subGroups, onClose }) => {
+const SubGroupList = ({ subGroups, handleSubGroupClick, onClose }) => {
   return (
     <View style={styles.subGroupContainer}>
       {/* Contêiner do texto e botão de fechar */}
@@ -29,12 +30,11 @@ const SubGroupList = ({ subGroups, onClose }) => {
         <TouchableWithoutFeedback>
           <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
             {subGroups.map((subGroup) => (
-              <View key={subGroup.id} style={styles.subGroupItemContainer}>
-                <TouchableOpacity style={styles.subGroupItem}>
-                  <Icon name={subGroup.icon || "food"} size={25} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.subGroupText}>{subGroup.name}</Text>
-              </View>
+              <GroupItem
+                key={subGroup.IdGroup}
+                group={subGroup}
+                onPress={handleSubGroupClick}
+              />
             ))}
           </View>
         </TouchableWithoutFeedback>

@@ -8,7 +8,7 @@ export default UserServices = {
       );
 
       const fetchRequest = fetch(
-        `http://${dataConnection.url}:${dataConnection.port}/user?Username=${username}&Password=${password}`,
+        `http://${dataConnection.url}:${dataConnection.port}/user?IdEnterprise=${dataConnection.idEnterprise}&Username=${username}&Password=${password}`,
         {
           method: "GET",
           headers: {
@@ -22,14 +22,12 @@ export default UserServices = {
       const dataFetch = await response.json();
 
       if (dataFetch.status === 404) {
-        alert("Usuário não encontrado ou senha incorreta.");
+        return alert("Usuário não encontrado ou senha incorreta.");
       }
 
       return dataFetch.detail.result[0];
     } catch (error) {
-      if (error.message === "Request timed out") {
-        alert("Sem conexão com o servidor.");
-      }
+      alert("Sem conexão com o servidor.");
     }
   },
 };

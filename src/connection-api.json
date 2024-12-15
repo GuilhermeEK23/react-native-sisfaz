@@ -1,4 +1,6 @@
 {
   "url": "192.168.1.4",
-  "port": 3001
+  "port": 3001,
+  "idEnterprise": 2043,
+  "codeGroupBase": "PDV"
 }

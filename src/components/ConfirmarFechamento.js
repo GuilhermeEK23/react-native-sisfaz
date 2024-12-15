@@ -5,10 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Modal,
-  TouchableWithoutFeedback,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import ModalAdditional from "./ModalAdditional";
 
 const ConfirmarFechamento = ({ navigation }) => {
   const [products, setProducts] = useState([
@@ -29,22 +28,6 @@ const ConfirmarFechamento = ({ navigation }) => {
   ]);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [adicionais, setAdicionais] = useState([
-    { id: 1, name: "Copo", quantity: 1 },
-    { id: 2, name: "Prato", quantity: 1 },
-    { id: 3, name: "Talher", quantity: 1 },
-    { id: 4, name: "Talher", quantity: 1 },
-    { id: 5, name: "Talher", quantity: 1 },
-    { id: 6, name: "Talher", quantity: 1 },
-    { id: 7, name: "Talher", quantity: 1 },
-    { id: 8, name: "Talher", quantity: 1 },
-    { id: 9, name: "Talher", quantity: 1 },
-    { id: 10, name: "Talher", quantity: 1 },
-    { id: 11, name: "Talher", quantity: 1 },
-    { id: 12, name: "Talher", quantity: 1 },
-    { id: 13, name: "Talher", quantity: 1 },
-    { id: 14, name: "Talher", quantity: 1 },
-  ]);
 
   const handleIncrement = (productId) => {
     setProducts(
@@ -59,7 +42,7 @@ const ConfirmarFechamento = ({ navigation }) => {
   const handleDecrement = (productId) => {
     setProducts(
       products.map((product) =>
-        product.id === productId && product.quantity > 0
+        product.id === productId && product.quantity > 1
           ? { ...product, quantity: product.quantity - 1 }
           : product
       )
@@ -70,82 +53,13 @@ const ConfirmarFechamento = ({ navigation }) => {
     setProducts(products.filter((product) => product.id !== productId));
   };
 
-  const handleAdicionalIncrement = (adicionalId) => {
-    setAdicionais(
-      adicionais.map((adicional) =>
-        adicional.id === adicionalId
-          ? { ...adicional, quantity: adicional.quantity + 1 }
-          : adicional
-      )
-    );
-  };
-
-  const handleAdicionalDecrement = (adicionalId) => {
-    setAdicionais(
-      adicionais.map((adicional) =>
-        adicional.id === adicionalId && adicional.quantity > 0
-          ? { ...adicional, quantity: adicional.quantity - 1 }
-          : adicional
-      )
-    );
-  };
-
   return (
     <View style={styles.contentArea}>
       {/* Modal de Adicionais */}
-      <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-          {/* O TouchableWithoutFeedback captura o toque fora do modal */}
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-            <View style={styles.modalDismissArea} />
-          </TouchableWithoutFeedback>
-
-          {/* Conteúdo do modal */}
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Adicionais</Text>
-
-            {/* ScrollView para garantir o scroll nos adicionais */}
-            <ScrollView
-              style={styles.adicionaisList}
-              showsVerticalScrollIndicator={false}
-            >
-              {adicionais.map((adicional) => (
-                <View key={adicional.id} style={styles.tableRow}>
-                  <Text style={styles.productName}>{adicional.name}</Text>
-                  <View style={styles.quantityControl}>
-                    <TouchableOpacity
-                      style={styles.decrementButton}
-                      onPress={() => handleAdicionalDecrement(adicional.id)}
-                    >
-                      <Text style={styles.controlText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>
-                      {adicional.quantity}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.incrementButton}
-                      onPress={() => handleAdicionalIncrement(adicional.id)}
-                    >
-                      <Text style={styles.controlText}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </ScrollView>
-
-            <TouchableOpacity
-              style={styles.closeModalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeModalText}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <ModalAdditional
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
 
       {/* Linha de Total e Botões */}
       <View style={styles.totalRow}>
@@ -335,51 +249,6 @@ const styles = StyleSheet.create({
     paddingRight: 25,
     flex: 1,
     alignItems: "flex-end",
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-end",
-  },
-  modalContainer: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  closeModalButton: {
-    backgroundColor: "#5A9A55",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  closeModalText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  scrollContainer: {
-    maxHeight: 200, // Defina a altura máxima do ScrollView
-    width: "100%",
-  },
-  modalDismissArea: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  adicionaisList: {
-    maxHeight: 250, // Ajuste a altura conforme necessário
-    width: "100%",
   },
 });
 
