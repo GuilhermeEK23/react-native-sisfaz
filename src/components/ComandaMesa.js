@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Text,
   View,
   TextInput,
   TouchableOpacity,
@@ -13,50 +14,47 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import GroupList from "./GroupList";
 import { ProductItem } from "./ProductItem";
 import ModalProduct from "./ModalProduct";
+import ProductServices from "../services/ProductServices";
+import GroupServices from "../services/GroupServices";
 
 const ComandaMesa = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [allGroups, setAllGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [subGroups, setSubGroups] = useState([]);
+  const [selectedGroupHasSubGroup, setSelectedGroupHasSubGroup] =
+    useState(false);
 
-  const staticProducts = [
-    { id: 1, name: "Refrigerante", price: 5.0 },
-    { id: 2, name: "Suco de Laranja", price: 7.0 },
-    { id: 3, name: "Cerveja Pilsen", price: 10.0 },
-    { id: 4, name: "Água com Gás", price: 3.0 },
-    { id: 5, name: "Vinho Tinto", price: 25.0 },
-    { id: 6, name: "Café Expresso", price: 4.0 },
-    { id: 7, name: "Chá Gelado", price: 6.0 },
-    { id: 8, name: "Água Sem Gás", price: 2.5 },
-    { id: 9, name: "Milkshake", price: 12.0 },
-    { id: 10, name: "Whisky", price: 30.0 },
-    { id: 11, name: "Água", price: 30.0 },
-    { id: 12, name: "Água", price: 30.0 },
-    { id: 13, name: "Água", price: 30.0 },
-    { id: 14, name: "Água", price: 30.0 },
-    { id: 15, name: "Água", price: 30.0 },
-    { id: 16, name: "Água", price: 30.0 },
-    { id: 17, name: "Água", price: 30.0 },
-    { id: 18, name: "Água", price: 30.0 },
-    { id: 19, name: "Água", price: 30.0 },
-    { id: 20, name: "Água", price: 30.0 },
-    { id: 21, name: "Água", price: 30.0 },
-    { id: 22, name: "Água", price: 30.0 },
-    { id: 23, name: "Água", price: 30.0 },
-    { id: 24, name: "Água", price: 30.0 },
-    { id: 25, name: "Água", price: 30.0 },
-    { id: 26, name: "Água", price: 30.0 },
-    { id: 27, name: "Água", price: 30.0 },
-    { id: 28, name: "Água", price: 30.0 },
-    { id: 29, name: "Água", price: 30.0 },
-    { id: 30, name: "Água", price: 30.0 },
-    { id: 32, name: "Água", price: 30.0 },
-    { id: 33, name: "Água", price: 30.0 },
-    { id: 34, name: "Água", price: 30.0 },
-    { id: 35, name: "Água", price: 30.0 },
-    { id: 36, name: "Água", price: 30.0 },
-    { id: 37, name: "Água", price: 30.0 },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const allProductsData = await ProductServices.requestAllProducts();
+      setAllProducts(allProductsData || []);
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (allProducts.length > 0) {
+      const filteredProducts = allProducts.filter((product) =>
+        product.Description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setProducts(filteredProducts);
+    }
+  }, [searchTerm, allProducts]);
+
+  useEffect(() => {
+    if (selectedGroup !== null) {
+      const filteredProducts = allProducts.filter(
+        (product) => product.IdGroup === selectedGroup
+      );
+      console.log(filteredProducts);
+      setProducts(filteredProducts);
+    }
+  }, [selectedGroup]);
 
   const handleProductPress = (product) => {
     setSelectedProduct(product);
@@ -66,6 +64,27 @@ const ComandaMesa = ({ navigation }) => {
   const handleCloseModal = () => {
     setModalVisible(false);
     setSelectedProduct(null);
+  };
+
+  const handleGroupClick = (group) => {
+    setSearchTerm("");
+    if (selectedGroup === group.IdGroup) {
+      // Fecha os subgrupos se o grupo já estiver selecionado
+      setSelectedGroup(null);
+      setSubGroups([]);
+    } else {
+      // Seleciona novo grupo e carrega os subgrupos
+      setSelectedGroup(group.IdGroup);
+      const subGroups = GroupServices.filterSubGroups(allGroups, group.IdGroup);
+      if (subGroups.length > 0) {
+        setSelectedGroupHasSubGroup(true);
+        setSubGroups(subGroups);
+      } else setSelectedGroupHasSubGroup(false);
+    }
+  };
+
+  const handleSubGroupClick = (subGroup) => {
+    setSelectedGroup(subGroup.IdGroup);
   };
 
   return (
@@ -92,21 +111,39 @@ const ComandaMesa = ({ navigation }) => {
         >
           <TouchableWithoutFeedback>
             <View style={styles.productGrid}>
-              {staticProducts
-                .filter((product) =>
-                  product.name.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((product, key) => (
-                  <ProductItem
-                    key={key}
-                    product={product}
-                    handleProductPress={handleProductPress}
-                  />
-                ))}
+              {products.length > 0 ? (
+                products
+                  .filter((product) =>
+                    product.Description.toLowerCase().includes(
+                      searchTerm.toLowerCase()
+                    )
+                  )
+                  .map((product, key) => (
+                    <ProductItem
+                      key={key}
+                      product={product}
+                      handleProductPress={handleProductPress}
+                    />
+                  ))
+              ) : (
+                <Text style={styles.noProductsText}>
+                  Nenhum produto encontrado
+                </Text>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
-        <GroupList />
+        <GroupList
+          handleGroupClick={handleGroupClick}
+          handleSubGroupClick={handleSubGroupClick}
+          selectedGroupHasSubGroup={selectedGroupHasSubGroup}
+          allGroups={allGroups}
+          setAllGroups={setAllGroups}
+          setSubGroups={setSubGroups}
+          subGroups={subGroups}
+          selectedGroup={selectedGroup}
+          setSelectedGroup={setSelectedGroup}
+        />
       </View>
 
       {/* Modal para o produto selecionado */}

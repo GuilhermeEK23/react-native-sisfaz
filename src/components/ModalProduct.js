@@ -64,7 +64,7 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   const handleAddToCart = () => {
     console.log(
       `Adicionado: ${
-        selectedProduct.name
+        selectedProduct.Description
       }, Quantidade: ${quantity}, Total: R$ ${calculateTotal()}`
     );
     handleCloseModal();
@@ -74,7 +74,9 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   };
 
   const calculateTotal = () => {
-    let productTotal = selectedProduct ? selectedProduct.price * quantity : 0;
+    let productTotal = selectedProduct
+      ? selectedProduct.SalePrice * quantity
+      : 0;
     let optionalsTotal = optionals.reduce(
       (acc, optional) => acc + optional.price * optional.quantity,
       0
@@ -93,9 +95,11 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={[styles.modalContainer, { top: "10%" }]}>
-              <Text style={styles.modalTitle}>{selectedProduct.name}</Text>
+              <Text style={styles.modalTitle}>
+                {selectedProduct.Description}
+              </Text>
               <Text style={styles.modalPrice}>
-                R$ {selectedProduct.price.toFixed(2)}
+                R$ {selectedProduct.SalePrice.toFixed(2)}
               </Text>
 
               {/* Controle de quantidade */}

@@ -16,7 +16,7 @@ export default GroupServices = {
   requestAllGroups: async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.4:3001/groups?IdEnterprise=${dataConnection.idEnterprise}&CodeGroupBase=${dataConnection.codeGroupBase}`
+        `http://${dataConnection.url}:${dataConnection.port}/groups?IdEnterprise=${dataConnection.idEnterprise}&CodeGroupBase=${dataConnection.codeGroupBase}`
       );
       const dataResponse = await response.json();
       return dataResponse.detail.result;

@@ -10,13 +10,18 @@ import GroupItem from "./GroupItem";
 import SubGroupList from "./SubGroupList";
 import GroupServices from "../services/GroupServices";
 
-const GroupList = () => {
-  const [allGroups, setAllGroups] = useState([]);
+const GroupList = ({
+  handleGroupClick,
+  handleSubGroupClick,
+  selectedGroupHasSubGroup,
+  allGroups,
+  setAllGroups,
+  subGroups,
+  setSubGroups,
+  selectedGroup,
+  setSelectedGroup,
+}) => {
   const [groups, setGroups] = useState([]);
-  const [subGroups, setSubGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [selectedGroupHasSubGroup, setSelectedGroupHasSubGroup] =
-    useState(false);
 
   useEffect(() => {
     const fetchAllGroups = async () => {
@@ -31,26 +36,6 @@ const GroupList = () => {
     const groups = GroupServices.filterGroups(allGroups);
     setGroups(groups);
   }, [allGroups]);
-
-  const handleGroupClick = (group) => {
-    if (selectedGroup === group.IdGroup) {
-      // Fecha os subgrupos se o grupo já estiver selecionado
-      setSelectedGroup(null);
-      setSubGroups([]);
-    } else {
-      // Seleciona novo grupo e carrega os subgrupos
-      setSelectedGroup(group.IdGroup);
-      const subGroups = GroupServices.filterSubGroups(allGroups, group.IdGroup);
-      if (subGroups.length > 0) {
-        setSelectedGroupHasSubGroup(true);
-        setSubGroups(subGroups);
-      } else setSelectedGroupHasSubGroup(false);
-    }
-  };
-
-  const handleSubGroupClick = (subGroup) => {
-    setSelectedGroup(subGroup.IdGroup);
-  };
 
   const handleCloseSubGroups = () => {
     // Fecha os subgrupos e redefine o grupo selecionado

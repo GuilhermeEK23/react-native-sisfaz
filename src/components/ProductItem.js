@@ -12,11 +12,11 @@ export const ProductItem = ({ product, handleProductPress }) => {
   return (
     <View>
       <TouchableOpacity
-        key={product.id}
+        key={product.IdProduct}
         style={styles.productSquare}
         onPress={() => handleProductPress(product)}
       >
-        <Text style={styles.productText}>{product.name}</Text>
+        <Text style={styles.productText}>{product.Description}</Text>
       </TouchableOpacity>
     </View>
   );
