@@ -15,11 +15,11 @@ import { HeaderContext } from "../components/HeaderContext";
 const HomeScreen = ({ route, navigation }) => {
   const { isMenuHeader, resetMenuHeader } = useContext(HeaderContext);
   const { user } = route.params;
-  const [comanda, setComanda] = useState(0);
+  const [orderNumber, setOrderNumber] = useState(0);
 
   const handleCreateComanda = () => {
-    if (comanda > 0) {
-      navigation.navigate("Product", { comanda, user });
+    if (orderNumber > 0) {
+      navigation.navigate("Product", { orderNumber, user });
     } else {
       alert("Por favor, insira um número de comanda válido.");
     }
@@ -28,7 +28,7 @@ const HomeScreen = ({ route, navigation }) => {
   const validateComanda = (text) => {
     const filteredText = text.replace(/[^0-9]/g, "");
     if (filteredText.length <= 4) {
-      setComanda(filteredText);
+      setOrderNumber(filteredText);
     }
   };
 
@@ -58,7 +58,7 @@ const HomeScreen = ({ route, navigation }) => {
                 style={styles.input}
                 placeholder="Digite o número da comanda"
                 placeholderTextColor="#888"
-                value={comanda}
+                value={orderNumber}
                 onChangeText={validateComanda}
                 keyboardType="numeric" // Exibe teclado numérico em Android e iOS
               />

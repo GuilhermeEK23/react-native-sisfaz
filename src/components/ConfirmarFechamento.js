@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,49 +8,61 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ModalAdditional from "./ModalAdditional";
+import { OrderContext } from "./OrderContext";
 
 const ConfirmarFechamento = ({ navigation }) => {
-  const [products, setProducts] = useState([
-    { id: 1, name: "Coca Cola", quantity: 1 },
-    { id: 2, name: "Água com Gás", quantity: 1 },
-    { id: 3, name: "Produto 1", quantity: 1 },
-    { id: 4, name: "Produto 2", quantity: 1 },
-    { id: 5, name: "Produto 3", quantity: 1 },
-    { id: 6, name: "Produto 4", quantity: 1 },
-    { id: 7, name: "Produto 5", quantity: 1 },
-    { id: 8, name: "Produto 6", quantity: 1 },
-    { id: 9, name: "Produto 7", quantity: 1 },
-    { id: 10, name: "Produto 8", quantity: 1 },
-    { id: 11, name: "Produto 9", quantity: 1 },
-    { id: 12, name: "Produto 10", quantity: 1 },
-    { id: 13, name: "Produto 11", quantity: 1 },
-    { id: 14, name: "Produto 12", quantity: 1 },
-  ]);
-
+  const { order, setOrder } = useContext(OrderContext);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleIncrement = (productId) => {
-    setProducts(
-      products.map((product) =>
-        product.id === productId
+    setOrder({
+      ...order,
+      products: order.products.map((product) =>
+        product.IdProduct === productId
           ? { ...product, quantity: product.quantity + 1 }
           : product
-      )
-    );
+      ),
+    });
   };
 
   const handleDecrement = (productId) => {
-    setProducts(
-      products.map((product) =>
-        product.id === productId && product.quantity > 1
+    setOrder({
+      ...order,
+      products: order.products.map((product) =>
+        product.IdProduct === productId && product.quantity > 1
           ? { ...product, quantity: product.quantity - 1 }
           : product
-      )
-    );
+      ),
+    });
   };
 
   const handleRemove = (productId) => {
-    setProducts(products.filter((product) => product.id !== productId));
+    setOrder({
+      ...order,
+      products: order.products.filter(
+        (product) => product.idProductInOrder !== productId
+      ),
+    });
+  };
+
+  const calculateTotal = () => {
+    let total = 0;
+    order.products.forEach((product) => {
+      let productTotal = product.SalePrice * product.quantity || 0;
+      let optionalsTotal = product.optionals.reduce(
+        (acc, optional) => acc + optional.SalePrice * optional.quantity,
+        0
+      );
+      total += productTotal + optionalsTotal * product.quantity;
+    }) || 0;
+
+    return total.toFixed(2).replace(".", ",");
+  };
+
+  const sendButtonHandler = () => {
+    console.log(JSON.stringify(order, null, 2));
+    // setProductsInOrder([])
+    // navigation.navigate("Home")
   };
 
   return (
@@ -63,7 +75,7 @@ const ConfirmarFechamento = ({ navigation }) => {
 
       {/* Linha de Total e Botões */}
       <View style={styles.totalRow}>
-        <Text style={styles.totalText}>Total: R$ 150,00</Text>
+        <Text style={styles.totalText}>Total: R$ {calculateTotal()}</Text>
 
         <View style={styles.buttonGroup}>
           <TouchableOpacity
@@ -74,7 +86,10 @@ const ConfirmarFechamento = ({ navigation }) => {
             <Text style={styles.adicionaisText}>Adicionais</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.sendButton}>
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={() => sendButtonHandler()}
+          >
             <Icon name="send" size={15} color="#fff" />
             <Text style={styles.sendText}>Enviar</Text>
           </TouchableOpacity>
@@ -84,49 +99,56 @@ const ConfirmarFechamento = ({ navigation }) => {
       {/* Divider entre Total e Tabela */}
       <View style={styles.divider} />
 
-      {/* Cabeçalho da Tabela */}
-      <View style={styles.headerRow}>
-        <Text style={styles.headerText}>Qtde.</Text>
-        <Text style={styles.headerText}>Nome</Text>
-        <Text style={styles.headerText}>Apagar</Text>
-      </View>
-
       {/* Tabela de Produtos */}
-      <ScrollView
-        style={styles.tableContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {products.map((product) => (
-          <View key={product.id} style={styles.tableRow}>
-            <View style={styles.quantityControl}>
-              <TouchableOpacity
-                style={styles.decrementButton}
-                onPress={() => handleDecrement(product.id)}
-              >
-                <Text style={styles.controlText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.quantityText}>{product.quantity}</Text>
-              <TouchableOpacity
-                style={styles.incrementButton}
-                onPress={() => handleIncrement(product.id)}
-              >
-                <Text style={styles.controlText}>+</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Nome Centralizado */}
-            <Text style={styles.productName}>{product.name}</Text>
-
-            {/* Ícone de Lixeira Distanciado da Borda */}
-            <TouchableOpacity
-              style={styles.trashIcon}
-              onPress={() => handleRemove(product.id)}
-            >
-              <Icon name="trash-can-outline" size={24} color="#888" />
-            </TouchableOpacity>
+      {order.products.length > 0 ? (
+        <View>
+          {/* Cabeçalho da Tabela */}
+          <View style={styles.headerRow}>
+            <Text style={styles.headerText}>Qtde.</Text>
+            <Text style={styles.headerText}>Nome</Text>
+            <Text style={styles.headerText}>Apagar</Text>
           </View>
-        ))}
-      </ScrollView>
+
+          {/* Tabela de Produtos */}
+          <ScrollView
+            style={styles.tableContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            {order.products.map((product, key) => (
+              <View key={key} style={styles.tableRow}>
+                <View style={styles.quantityControl}>
+                  <TouchableOpacity
+                    style={styles.decrementButton}
+                    onPress={() => handleDecrement(product.IdProduct)}
+                  >
+                    <Text style={styles.controlText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantityText}>{product.quantity}</Text>
+                  <TouchableOpacity
+                    style={styles.incrementButton}
+                    onPress={() => handleIncrement(product.IdProduct)}
+                  >
+                    <Text style={styles.controlText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Nome Centralizado */}
+                <Text style={styles.productName}>{product.Description}</Text>
+
+                {/* Ícone de Lixeira Distanciado da Borda */}
+                <TouchableOpacity
+                  style={styles.trashIcon}
+                  onPress={() => handleRemove(product.idProductInOrder)}
+                >
+                  <Icon name="trash-can-outline" size={24} color="#888" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      ) : (
+        <Text>Nenhum produto adicionado</Text>
+      )}
     </View>
   );
 };

@@ -15,6 +15,7 @@ import ComandaMesa from "../components/ComandaMesa";
 import ConfirmarFechamento from "../components/ConfirmarFechamento";
 import Conta from "../components/Conta";
 import { HeaderContext } from "../components/HeaderContext";
+import { OrderProvider } from "../components/OrderContext";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -33,62 +34,63 @@ const CustomTabLabel = ({ label, comandaNumber, focused }) => (
 
 const ProductScreen = ({ route }) => {
   const { isMenuHeader, resetMenuHeader } = useContext(HeaderContext);
-  const { comanda, user } = route.params;
-  console.log("Comanda:", comanda);
-  console.log("User:", user.Name);
+  const { orderNumber, user } = route.params;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <LinearGradient
-        colors={["rgb(91, 154, 85)", "rgba(0, 0, 0, 0.84)"]}
-        style={styles.gradient}
-      >
-        <View style={styles.container}>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarLabelStyle: styles.tabLabel,
-              tabBarStyle: styles.tabBar,
-              tabBarIndicatorStyle: styles.tabIndicator,
-              swipeEnabled: false, // Desabilitar swipe entre as tabs
-              animationEnabled: true, // Adiciona animação na transição
-              tabBarActiveTintColor: "#fff", // Cor da label ativa
-              tabBarInactiveTintColor: "rgba(255,255,255,0.5)", // Cor da label inativa
-              tabBarPressOpacity: 1, // Remove efeito de opacidade ao pressionar
-            })}
-          >
-            <Tab.Screen
-              name="Comanda"
-              component={ComandaMesa}
-              options={{
-                tabBarLabel: ({ focused }) => (
-                  <CustomTabLabel
-                    label="Comanda"
-                    comandaNumber={comanda}
-                    focused={focused}
-                  />
-                ),
+    <OrderProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <LinearGradient
+          colors={["rgb(91, 154, 85)", "rgba(0, 0, 0, 0.84)"]}
+          style={styles.gradient}
+        >
+          <View style={styles.container}>
+            <Tab.Navigator
+              screenOptions={({ route }) => ({
+                tabBarLabelStyle: styles.tabLabel,
+                tabBarStyle: styles.tabBar,
+                tabBarIndicatorStyle: styles.tabIndicator,
+                swipeEnabled: true, // Desabilitar swipe entre as tabs
+                animationEnabled: true, // Adiciona animação na transição
+                tabBarActiveTintColor: "#fff", // Cor da label ativa
+                tabBarInactiveTintColor: "rgba(255,255,255,0.5)", // Cor da label inativa
+                tabBarPressOpacity: 1, // Remove efeito de opacidade ao pressionar
+              })}
+            >
+              <Tab.Screen
+                name="Comanda"
+                component={ComandaMesa}
+                initialParams={{ orderNumber, user }}
+                options={{
+                  tabBarLabel: ({ focused }) => (
+                    <CustomTabLabel
+                      label="Comanda"
+                      comandaNumber={orderNumber}
+                      focused={focused}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="Confirmar Fechamento"
+                component={ConfirmarFechamento}
+              />
+              <Tab.Screen name="Conta" component={Conta} />
+            </Tab.Navigator>
+          </View>
+          {/* Camada de bloqueio quando o menu está aberto */}
+          {isMenuHeader && (
+            <TouchableWithoutFeedback
+              onPress={() => {
+                Keyboard.dismiss();
+                resetMenuHeader();
               }}
-            />
-            <Tab.Screen
-              name="Confirmar Fechamento"
-              component={ConfirmarFechamento}
-            />
-            <Tab.Screen name="Conta" component={Conta} />
-          </Tab.Navigator>
-        </View>
-        {/* Camada de bloqueio quando o menu está aberto */}
-        {isMenuHeader && (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-              resetMenuHeader();
-            }}
-          >
-            <View style={styles.overlayMenu} />
-          </TouchableWithoutFeedback>
-        )}
-      </LinearGradient>
-    </SafeAreaView>
+            >
+              <View style={styles.overlayMenu} />
+            </TouchableWithoutFeedback>
+          )}
+        </LinearGradient>
+      </SafeAreaView>
+    </OrderProvider>
   );
 };
 

@@ -26,6 +26,7 @@ export default GroupServices = {
     }
   },
   filterGroups: (allGroups) => {
+    if (!allGroups) return [];
     const groupBase = allGroups.find(
       (group) => group.Code === dataConnection.codeGroupBase
     );

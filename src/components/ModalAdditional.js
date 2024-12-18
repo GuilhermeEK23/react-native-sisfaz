@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,29 +8,28 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from "react-native";
+import AdditionalServices from "../services/AdditionalServices";
 
 const ModalAdditional = ({ modalVisible, setModalVisible }) => {
-  const [adicionais, setAdicionais] = useState([
-    { id: 1, name: "Copo", quantity: 1 },
-    { id: 2, name: "Prato", quantity: 1 },
-    { id: 3, name: "Talher", quantity: 1 },
-    { id: 4, name: "Talher", quantity: 1 },
-    { id: 5, name: "Talher", quantity: 1 },
-    { id: 6, name: "Talher", quantity: 1 },
-    { id: 7, name: "Talher", quantity: 1 },
-    { id: 8, name: "Talher", quantity: 1 },
-    { id: 9, name: "Talher", quantity: 1 },
-    { id: 10, name: "Talher", quantity: 1 },
-    { id: 11, name: "Talher", quantity: 1 },
-    { id: 12, name: "Talher", quantity: 1 },
-    { id: 13, name: "Talher", quantity: 1 },
-    { id: 14, name: "Talher", quantity: 1 },
-  ]);
+  const [additional, setAdditional] = useState([]);
+
+  useEffect(() => {
+    const fetchAdditional = async () => {
+      const additionalData = await AdditionalServices.requestAdditional();
+      const additional = additionalData.map((item) => ({
+        ...item,
+        quantity: 0,
+      }));
+
+      setAdditional(additional || []);
+    };
+    fetchAdditional();
+  }, []);
 
   const handleAdicionalIncrement = (adicionalId) => {
-    setAdicionais(
-      adicionais.map((adicional) =>
-        adicional.id === adicionalId
+    setAdditional(
+      additional.map((adicional) =>
+        adicional.IdAdditional === adicionalId
           ? { ...adicional, quantity: adicional.quantity + 1 }
           : adicional
       )
@@ -38,9 +37,9 @@ const ModalAdditional = ({ modalVisible, setModalVisible }) => {
   };
 
   const handleAdicionalDecrement = (adicionalId) => {
-    setAdicionais(
-      adicionais.map((adicional) =>
-        adicional.id === adicionalId && adicional.quantity > 0
+    setAdditional(
+      additional.map((adicional) =>
+        adicional.IdAdditional === adicionalId && adicional.quantity > 0
           ? { ...adicional, quantity: adicional.quantity - 1 }
           : adicional
       )
@@ -50,8 +49,8 @@ const ModalAdditional = ({ modalVisible, setModalVisible }) => {
   return (
     <Modal
       transparent={true}
-      visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
+      visible={modalVisible}
     >
       <View style={styles.modalBackground}>
         {/* O TouchableWithoutFeedback captura o toque fora do modal */}
@@ -68,20 +67,24 @@ const ModalAdditional = ({ modalVisible, setModalVisible }) => {
             style={styles.adicionaisList}
             showsVerticalScrollIndicator={false}
           >
-            {adicionais.map((adicional) => (
-              <View key={adicional.id} style={styles.tableRow}>
-                <Text style={styles.productName}>{adicional.name}</Text>
+            {additional.map((adicional) => (
+              <View key={adicional.IdAdditional} style={styles.tableRow}>
+                <Text style={styles.productName}>{adicional.Description}</Text>
                 <View style={styles.quantityControl}>
                   <TouchableOpacity
                     style={styles.decrementButton}
-                    onPress={() => handleAdicionalDecrement(adicional.id)}
+                    onPress={() =>
+                      handleAdicionalDecrement(adicional.IdAdditional)
+                    }
                   >
                     <Text style={styles.controlText}>-</Text>
                   </TouchableOpacity>
                   <Text style={styles.quantityText}>{adicional.quantity}</Text>
                   <TouchableOpacity
                     style={styles.incrementButton}
-                    onPress={() => handleAdicionalIncrement(adicional.id)}
+                    onPress={() =>
+                      handleAdicionalIncrement(adicional.IdAdditional)
+                    }
                   >
                     <Text style={styles.controlText}>+</Text>
                   </TouchableOpacity>

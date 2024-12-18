@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -16,8 +16,9 @@ import { ProductItem } from "./ProductItem";
 import ModalProduct from "./ModalProduct";
 import ProductServices from "../services/ProductServices";
 import GroupServices from "../services/GroupServices";
+import { OrderContext } from "./OrderContext";
 
-const ComandaMesa = ({ navigation }) => {
+const ComandaMesa = ({ navigation, route }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,8 +29,12 @@ const ComandaMesa = ({ navigation }) => {
   const [subGroups, setSubGroups] = useState([]);
   const [selectedGroupHasSubGroup, setSelectedGroupHasSubGroup] =
     useState(false);
+  const { order, setOrder } = useContext(OrderContext);
+
+  const { orderNumber, user } = route.params;
 
   useEffect(() => {
+    setOrder({ ...order, user: user, orderNumber: orderNumber });
     const fetchProducts = async () => {
       const allProductsData = await ProductServices.requestAllProducts();
       setAllProducts(allProductsData || []);
@@ -51,7 +56,6 @@ const ComandaMesa = ({ navigation }) => {
       const filteredProducts = allProducts.filter(
         (product) => product.IdGroup === selectedGroup
       );
-      console.log(filteredProducts);
       setProducts(filteredProducts);
     }
   }, [selectedGroup]);

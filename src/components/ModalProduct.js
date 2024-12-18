@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 import {
   View,
   Text,
@@ -9,28 +11,15 @@ import {
   TouchableWithoutFeedback,
   Modal,
 } from "react-native";
+import { OptionalServices } from "../services/OptionalServices";
+import { OrderContext } from "./OrderContext";
 
 const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   const [observationTerm, setObservationTerm] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [optionalsVisible, setOptionalsVisible] = useState(false);
-  const [optionals, setOptionals] = useState([
-    { id: 1, name: "Adicional de Carne", price: 6.0, quantity: 0 },
-    { id: 2, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 3, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 4, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 5, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 6, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 7, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 8, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 9, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 10, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 11, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 12, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 13, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 14, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-    { id: 15, name: "Adicional de Queijo", price: 3.5, quantity: 0 },
-  ]);
+  const [optionals, setOptionals] = useState([]);
+  const { order, setOrder } = useContext(OrderContext);
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -45,7 +34,7 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   const incrementOptional = (optionalId) => {
     setOptionals((prevOptionals) =>
       prevOptionals.map((optional) =>
-        optional.id === optionalId
+        optional.IdProductGrill === optionalId
           ? { ...optional, quantity: optional.quantity + 1 }
           : optional
       )
@@ -54,7 +43,7 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   const decrementOptional = (optionalId) => {
     setOptionals((prevOptionals) =>
       prevOptionals.map((optional) =>
-        optional.id === optionalId && optional.quantity > 0
+        optional.IdProductGrill === optionalId && optional.quantity > 0
           ? { ...optional, quantity: optional.quantity - 1 }
           : optional
       )
@@ -62,15 +51,29 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
   };
 
   const handleAddToCart = () => {
-    console.log(
-      `Adicionado: ${
-        selectedProduct.Description
-      }, Quantidade: ${quantity}, Total: R$ ${calculateTotal()}`
-    );
+    const productToAdd = {
+      ...selectedProduct,
+      idProductInOrder: uuidv4(),
+      quantity,
+      Observations: observationTerm,
+      optionals: optionals.filter((optional) => optional.quantity > 0),
+    };
+    setOrder({ ...order, products: [...order.products, productToAdd] });
+
     handleCloseModal();
   };
-  const handleOptionals = () => {
-    setOptionalsVisible(!optionalsVisible);
+  const handleOptionals = async () => {
+    if (optionalsVisible) {
+      setOptionalsVisible(false);
+    } else if (optionals.length > 0) {
+      setOptionalsVisible(true);
+    } else {
+      setOptionalsVisible(!optionalsVisible);
+      const optional = await OptionalServices.requestOptionalsByProduct(
+        selectedProduct.IdProduct
+      );
+      setOptionals(optional.map((opt) => ({ ...opt, quantity: 0 })));
+    }
   };
 
   const calculateTotal = () => {
@@ -78,10 +81,12 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
       ? selectedProduct.SalePrice * quantity
       : 0;
     let optionalsTotal = optionals.reduce(
-      (acc, optional) => acc + optional.price * optional.quantity,
+      (acc, optional) => acc + optional.SalePrice * optional.quantity,
       0
     );
-    return (productTotal + optionalsTotal).toFixed(2);
+    return (productTotal + optionalsTotal * quantity)
+      .toFixed(2)
+      .replace(".", ",");
   };
 
   return (
@@ -99,7 +104,7 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
                 {selectedProduct.Description}
               </Text>
               <Text style={styles.modalPrice}>
-                R$ {selectedProduct.SalePrice.toFixed(2)}
+                R$ {selectedProduct.SalePrice.toFixed(2).replace(".", ",")}
               </Text>
 
               {/* Controle de quantidade */}
@@ -127,30 +132,36 @@ const ModalProduct = ({ modalVisible, handleCloseModal, selectedProduct }) => {
                   <View style={styles.optionalsContainer}>
                     <Text style={styles.optionalsTitle}>Opcionais</Text>
                     {optionals.map((optional) => (
-                      <TouchableWithoutFeedback key={optional.id}>
+                      <TouchableWithoutFeedback key={optional.IdProductGrill}>
                         <View style={styles.optionalRow}>
                           <Text style={styles.optionalName}>
-                            {optional.name}
+                            {optional.Description}
                           </Text>
-                          <Text style={styles.optionalPrice}>
-                            R$ {optional.price.toFixed(2)}
-                          </Text>
-                          <View style={styles.quantityContainer}>
-                            <TouchableOpacity
-                              onPress={() => decrementOptional(optional.id)}
-                              style={styles.quantitysubButton}
-                            >
-                              <Text style={styles.quantityText}>-</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.quantityNumber}>
-                              {optional.quantity}
+                          <View style={styles.optionalPriceContainer}>
+                            <Text style={styles.optionalPrice}>
+                              R$ {optional.SalePrice.toFixed(2)}
                             </Text>
-                            <TouchableOpacity
-                              onPress={() => incrementOptional(optional.id)}
-                              style={styles.quantityButton}
-                            >
-                              <Text style={styles.quantityText}>+</Text>
-                            </TouchableOpacity>
+                            <View style={styles.quantityContainer}>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  decrementOptional(optional.IdProductGrill)
+                                }
+                                style={styles.quantitysubButton}
+                              >
+                                <Text style={styles.quantityText}>-</Text>
+                              </TouchableOpacity>
+                              <Text style={styles.quantityNumber}>
+                                {optional.quantity}
+                              </Text>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  incrementOptional(optional.IdProductGrill)
+                                }
+                                style={styles.quantityButton}
+                              >
+                                <Text style={styles.quantityText}>+</Text>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                       </TouchableWithoutFeedback>
@@ -275,8 +286,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
+  optionalPriceContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
+  },
   optionalName: {
     fontSize: 14, // Diminuir a fonte do nome do opcional
+    maxWidth: "48%",
   },
   optionalPrice: {
     fontSize: 14,
